@@ -3,6 +3,7 @@ export * from "./builtin-agent.type";
 export * from "./category.type";
 export * from "./chat-message.type";
 export * from "./data.type";
+export * from "./embedding.type";
 export * from "./execution.type";
 export * from "./fail-mode.type";
 export * from "./input.type";
