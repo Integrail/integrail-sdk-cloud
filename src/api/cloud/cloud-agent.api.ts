@@ -24,7 +24,7 @@ export class CloudAgentApi extends BaseApi {
 export class CloudBuiltinAgentApi extends BaseApi {
   public async list(): Promise<BuiltinAgentListResponse> {
     // return BuiltinAgentListResponseSchema.parse(
-    return await this.get("api/node/list").then((r) => r.json());
+    return await this.httpGet("api/node/list").then((r) => r.json());
     // );
   }
 
@@ -39,7 +39,7 @@ export class CloudBuiltinAgentApi extends BaseApi {
       throw new Error("Not implemented.");
     }
     // return AgentExecuteNonStreamingResponseSchema.parse(
-    return await this.post(`api/node/execute`, payload).then((r) => r.json());
+    return await this.httpPost(`api/node/execute`, payload).then((r) => r.json());
     // );
   }
 }
@@ -66,7 +66,7 @@ export class CloudMultiAgentApi extends BaseApi {
   ): Promise<AgentExecuteNonStreamingResponse | AbortController> {
     if (payload.stream === true && onEvent != null) {
       const abortController: AbortController = new AbortController();
-      const response = await this.fetch(`api/${accountId}/agent/${agentId}/execute`, {
+      const response = await this.httpFetch(`api/${accountId}/agent/${agentId}/execute`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -91,7 +91,7 @@ export class CloudMultiAgentApi extends BaseApi {
       return abortController;
     }
     // return AgentExecuteNonStreamingResponseSchema.parse(
-    return await this.post(`api/${accountId}/agent/${agentId}/execute`, payload).then((r) =>
+    return await this.httpPost(`api/${accountId}/agent/${agentId}/execute`, payload).then((r) =>
       r.json(),
     );
     // );
@@ -101,7 +101,7 @@ export class CloudMultiAgentApi extends BaseApi {
 export class CloudAgentCategoryApi extends BaseApi {
   public async list(): Promise<AgentCategoryListResponse> {
     // return AgentCategoryListResponseSchema.parse(
-    return await this.get("api/node/category/list").then((r) => r.json());
+    return await this.httpGet("api/node/category/list").then((r) => r.json());
     // );
   }
 }
