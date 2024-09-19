@@ -1,18 +1,14 @@
-import { AgentExecution, ExecutionEvent, ExecutionEventSchema } from "@/types/execution.type";
+import { AgentExecution, ExecutionEvent } from "@/types/execution.type";
 import { MultiAgentId } from "@/types/multi-agent.type";
 import { BaseApi } from "@/api/base.api";
 import { AccountId } from "@/types/account.type";
 import {
   AgentCategoryListResponse,
-  AgentCategoryListResponseSchema,
   AgentExecuteNonStreamingResponse,
-  AgentExecuteNonStreamingResponseSchema,
   BuiltinAgentExecuteNonStreamingRequest,
   BuiltinAgentExecuteRequest,
   BuiltinAgentExecuteStreamingRequest,
   BuiltinAgentListResponse,
-  BuiltinAgentListResponseSchema,
-  MultiAgentExecuteInlineRequestSchema,
   MultiAgentExecuteRequestSchema,
 } from "@/api/common/agent.api";
 import "@/polyfills/AbortController"; // Import the polyfill for AbortController
