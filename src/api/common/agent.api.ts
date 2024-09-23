@@ -1,13 +1,98 @@
 import { z } from "@/prelude/zod";
 import {
   AgentCategory,
+  AgentExecution,
   AgentSubcategory,
   BuiltinAgentSchema,
+  ExecutionEvent,
   ExecutionIdSchema,
   InlineMultiAgentSchema,
-  MultiAgentSchema,
 } from "@/types";
-import { BaseResponseSchema } from "@/api/base.api";
+import { BaseApi, BaseResponseSchema } from "@/api/base.api";
+import { jsonl } from "@/helpers/jsonl.helper";
+
+export class BaseAgentApi extends BaseApi {
+  protected async wrapExecution(
+    url: string,
+    payload: any,
+    onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
+    onFinish?: (execution: AgentExecution | null) => any,
+  ): Promise<AbortController | AgentExecuteNonStreamingResponse> {
+    if (payload.stream === true && onEvent != null) {
+      const abortController: AbortController = new AbortController();
+      const response = await this.fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        signal: abortController.signal,
+      });
+      let execution: AgentExecution | null = null;
+      void jsonl(response, async (event) => {
+        // const event = ExecutionEventSchema.parse(data);
+        if (event.op === "init") execution = event.execution;
+        else if (execution != null) {
+          execution = AgentExecution.applyEvents({
+            ...execution,
+            events: [...(execution.events ?? []), event],
+          });
+        }
+        !abortController.signal.aborted && (await onEvent(event, execution));
+      })
+        .catch((error) => {
+          abortController.abort(error.message);
+        })
+        .then(() => onFinish?.(execution));
+      return abortController;
+    }
+    return AgentExecuteNonStreamingResponseSchema.parse(
+      await this.httpPost(url, payload).then((r) => r.json()),
+    );
+  }
+
+  protected async wrapExecutionMultipart(
+    url: string,
+    payload: any,
+    files: Record<string, Blob>,
+    onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
+    onFinish?: (execution: AgentExecution | null) => any,
+  ): Promise<AbortController | AgentExecuteNonStreamingResponse> {
+    if (payload.stream === true && onEvent != null) {
+      const abortController: AbortController = new AbortController();
+
+      const formData = new FormData();
+      for (const [key, value] of Object.entries(files)) formData.append(key, value);
+      formData.append("payload", JSON.stringify(payload));
+
+      const response = await this.fetch(url, {
+        method: "POST",
+        body: formData,
+        signal: abortController.signal,
+      });
+      let execution: AgentExecution | null = null;
+      void jsonl(response, async (event) => {
+        // const event = ExecutionEventSchema.parse(data);
+        if (event.op === "init") execution = event.execution;
+        else if (execution != null) {
+          execution = AgentExecution.applyEvents({
+            ...execution,
+            events: [...(execution.events ?? []), event],
+          });
+        }
+        !abortController.signal.aborted && (await onEvent(event, execution));
+      })
+        .catch((error) => {
+          abortController.abort(error.message);
+        })
+        .then(() => onFinish?.(execution));
+      return abortController;
+    }
+    return AgentExecuteNonStreamingResponseSchema.parse(
+      await this.httpPost(url, payload).then((r) => r.json()),
+    );
+  }
+}
+
+// Options.
 
 export type BaseAgentExecutionOptions = Record<string, never>;
 export type AgentExecutionOptionsNonStreaming = BaseAgentExecutionOptions & { stream?: false };

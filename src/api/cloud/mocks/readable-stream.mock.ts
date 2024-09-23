@@ -1,6 +1,6 @@
 import { Readable } from "stream";
 
-class MockReadableStream extends Readable {
+export class MockReadableStream extends Readable {
   private dataQueue: Buffer[];
   private ended: boolean;
 
@@ -33,5 +33,3 @@ class MockReadableStream extends Readable {
     this.emit("error", error);
   }
 }
-
-export default MockReadableStream;

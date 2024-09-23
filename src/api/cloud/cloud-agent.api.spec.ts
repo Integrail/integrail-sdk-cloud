@@ -1,20 +1,13 @@
 // eslint-disable-next-line import/order
 import fetchMock from "jest-fetch-mock";
 
-jest.setMock("cross-fetch", {
-  ...jest.requireActual("cross-fetch"),
-  __esmodule: true,
-  fetch: fetchMock,
-  default: fetchMock,
-});
-
 import {
   CloudMultiAgentApi,
   CloudMultiAgentExecuteNonStreamingRequest,
   CloudMultiAgentExecuteStreamingRequest,
 } from "@/api/cloud/cloud-agent.api";
 import { AgentExecuteNonStreamingResponse } from "@/api/common/agent.api";
-import MockReadableStream from "@/api/cloud/mocks/MockReadableStream";
+import { MockReadableStream } from "@/api/cloud/mocks/readable-stream.mock";
 import { ExecutionEvent, ExecutionEventOp } from "@/types/execution.type";
 import { MultiAgentId } from "@/types/multi-agent.type";
 import { AccountId } from "@/types/account.type";
@@ -37,6 +30,8 @@ describe("CloudMultiAgentApi", () => {
       baseUri: "http://localhost",
       apiToken: "token",
     });
+    fetchMock.enableMocks();
+    fetchMock.dontMock();
   });
 
   afterEach(() => {

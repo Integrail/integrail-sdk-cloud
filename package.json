@@ -83,7 +83,6 @@
   "dependencies": {
     "@anatine/zod-openapi": "^2.2.6",
     "ajv": "^7.2.4",
-    "cross-fetch": "^4.0.0",
     "fp-ts": "^2.16.9",
     "node-abort-controller": "^3.1.1",
     "openapi3-ts": "^4.3.3",
