@@ -14,3 +14,4 @@ export * from "./node.type";
 export * from "./output.type";
 export * from "./stats.type";
 export * from "./value.type";
+export * from "./vector-memory.type";
