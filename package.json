@@ -21,6 +21,7 @@
         "types": "./dist/index.d.ts"
       },
       "import": {
+        "default": "./dist/index.js",
         "types": "./dist/index.d.ts"
       }
     },
@@ -30,6 +31,7 @@
         "types": "./dist/api/integrail.api.d.ts"
       },
       "import": {
+        "default": "./dist/api/integrail.api.js",
         "types": "./dist/api/integrail.api.d.ts"
       }
     },
@@ -39,6 +41,7 @@
         "types": "./dist/prelude/index.d.ts"
       },
       "import": {
+        "default": "./dist/prelude/index.js",
         "types": "./dist/prelude/index.d.ts"
       }
     },
@@ -48,6 +51,7 @@
         "types": "./dist/types/index.d.ts"
       },
       "import": {
+        "default": "./dist/types/index.js",
         "types": "./dist/types/index.d.ts"
       }
     }
