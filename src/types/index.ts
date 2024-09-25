@@ -1,5 +1,5 @@
 export * from "./account.type";
-export * from "./builtin-agent.type";
+export * from "./agent.type";
 export * from "./category.type";
 export * from "./chat-message.type";
 export * from "./data.type";
@@ -8,7 +8,7 @@ export * from "./execution.type";
 export * from "./fail-mode.type";
 export * from "./input.type";
 export * from "./media.type";
-export * from "./multi-agent.type";
+export * from "./node-definition.type";
 export * from "./node-execution.type";
 export * from "./node.type";
 export * from "./output.type";

@@ -1,6 +1,6 @@
 import { z } from "@/prelude/zod";
 
-import { MultiAgentSchema } from "./multi-agent.type";
+import { AgentSchema } from "./agent.type";
 import { NodeId } from "./node.type";
 import {
   NodeExecutionState,
@@ -123,7 +123,7 @@ export const AgentExecutionSchema = z.object({
   startedAt: z.coerce.date().nullish(),
   finishedAt: z.coerce.date().nullish(),
   pipelineId: z.string().min(1).nullish(),
-  pipeline: MultiAgentSchema,
+  pipeline: AgentSchema,
   externalId: z.string().nullish(),
   state: z.record(NodeExecutionStateSchema),
   stats: ExecutionStatsSchema.nullish(),

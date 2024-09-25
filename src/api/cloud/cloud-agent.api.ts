@@ -1,5 +1,5 @@
 import { AgentExecution, ExecutionEvent } from "@/types/execution.type";
-import { MultiAgentId } from "@/types/multi-agent.type";
+import { AgentId } from "@/types/agent.type";
 import { BaseApi } from "@/api/base.api";
 import { AccountId } from "@/types/account.type";
 import {
@@ -7,63 +7,37 @@ import {
   AgentCategoryListResponseSchema,
   AgentExecuteNonStreamingResponse,
   BaseAgentApi,
-  BuiltinAgentExecuteNonStreamingRequest,
-  BuiltinAgentExecuteRequest,
-  BuiltinAgentExecuteStreamingRequest,
-  BuiltinAgentListResponse,
-  BuiltinAgentListResponseSchema,
-  MultiAgentExecuteRequestSchema,
+  SingleNodeExecuteNonStreamingRequest,
+  SingleNodeExecuteRequest,
+  SingleNodeExecuteStreamingRequest,
+  NodeDefinitionListResponse,
+  NodeDefinitionListResponseSchema,
+  AgentExecuteRequestSchema,
 } from "@/api/common/agent.api";
 import "@/polyfills/AbortController";
 import { z } from "@/prelude/zod";
 
-export class CloudAgentApi extends BaseApi {
-  public readonly builtin = new CloudBuiltinAgentApi(this.options);
-  public readonly multi = new CloudMultiAgentApi(this.options);
-  public readonly category = new CloudAgentCategoryApi(this.options);
-}
-
-export class CloudBuiltinAgentApi extends BaseAgentApi {
-  public async list(): Promise<BuiltinAgentListResponse> {
-    return BuiltinAgentListResponseSchema.parse(
-      await this.httpGet("api/node/list").then((r) => r.json()),
-    );
+export class CloudAgentApi extends BaseAgentApi {
+  public get multi(): CloudAgentApi {
+    return this;
   }
 
   public async execute(
-    payload: BuiltinAgentExecuteNonStreamingRequest,
+    agentId: AgentId,
+    accountId: AccountId,
+    payload: CloudAgentExecuteNonStreamingRequest,
   ): Promise<AgentExecuteNonStreamingResponse>;
   public async execute(
-    payload: BuiltinAgentExecuteStreamingRequest,
-    onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
-    onFinish?: (execution: AgentExecution | null) => any,
-  ): Promise<AbortController>;
-  public async execute(
-    payload: BuiltinAgentExecuteRequest,
-    onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
-    onFinish?: (execution: AgentExecution | null) => any,
-  ): Promise<AgentExecuteNonStreamingResponse | AbortController> {
-    return await this.wrapExecution("api/node/execute", payload, onEvent, onFinish);
-  }
-}
-
-export class CloudMultiAgentApi extends BaseAgentApi {
-  public async execute(
-    agentId: MultiAgentId,
+    agentId: AgentId,
     accountId: AccountId,
-    payload: CloudMultiAgentExecuteNonStreamingRequest,
-  ): Promise<AgentExecuteNonStreamingResponse>;
-  public async execute(
-    agentId: MultiAgentId,
-    accountId: AccountId,
-    payload: CloudMultiAgentExecuteStreamingRequest,
+    payload: CloudAgentExecuteStreamingRequest,
     onEvent: (event: ExecutionEvent, execution: AgentExecution | null) => any,
     onFinish?: (execution: AgentExecution | null) => any,
   ): Promise<AbortController>;
   public async execute(
-    agentId: MultiAgentId,
+    agentId: AgentId,
     accountId: AccountId,
-    payload: CloudMultiAgentExecuteRequest,
+    payload: CloudAgentExecuteRequest,
     onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
     onFinish?: (execution: AgentExecution | null) => any,
   ): Promise<AgentExecuteNonStreamingResponse | AbortController> {
@@ -76,23 +50,23 @@ export class CloudMultiAgentApi extends BaseAgentApi {
   }
 
   public async executeMultipart(
-    agentId: MultiAgentId,
+    agentId: AgentId,
     accountId: AccountId,
-    payload: CloudMultiAgentExecuteNonStreamingRequest,
+    payload: CloudAgentExecuteNonStreamingRequest,
     files: Record<string, Blob>,
   ): Promise<AgentExecuteNonStreamingResponse>;
   public async executeMultipart(
-    agentId: MultiAgentId,
+    agentId: AgentId,
     accountId: AccountId,
-    payload: CloudMultiAgentExecuteStreamingRequest,
+    payload: CloudAgentExecuteStreamingRequest,
     files: Record<string, Blob>,
     onEvent: (event: ExecutionEvent, execution: AgentExecution | null) => any,
     onFinish?: (execution: AgentExecution | null) => any,
   ): Promise<AbortController>;
   public async executeMultipart(
-    agentId: MultiAgentId,
+    agentId: AgentId,
     accountId: AccountId,
-    payload: CloudMultiAgentExecuteRequest,
+    payload: CloudAgentExecuteRequest,
     files: Record<string, Blob>,
     onEvent?: (event: ExecutionEvent, execution: AgentExecution | null) => any,
     onFinish?: (execution: AgentExecution | null) => any,
@@ -107,7 +81,7 @@ export class CloudMultiAgentApi extends BaseAgentApi {
   }
 }
 
-export class CloudAgentCategoryApi extends BaseApi {
+export class CloudCategoryApi extends BaseApi {
   public async list(): Promise<AgentCategoryListResponse> {
     return AgentCategoryListResponseSchema.parse(
       await this.httpGet("api/node/category/list").then((r) => r.json()),
@@ -115,23 +89,21 @@ export class CloudAgentCategoryApi extends BaseApi {
   }
 }
 
-export const CloudMultiAgentExecuteRequestSchema = MultiAgentExecuteRequestSchema.extend({
+export const CloudAgentExecuteRequestSchema = AgentExecuteRequestSchema.extend({
   externalId: z.string().nullish(),
 });
-export type CloudMultiAgentExecuteRequest = z.infer<typeof CloudMultiAgentExecuteRequestSchema>;
+export type CloudAgentExecuteRequest = z.infer<typeof CloudAgentExecuteRequestSchema>;
 
-export const CloudMultiAgentExecuteStreamingRequestSchema =
-  CloudMultiAgentExecuteRequestSchema.extend({
-    stream: z.literal(true),
-  });
-export type CloudMultiAgentExecuteStreamingRequest = z.infer<
-  typeof CloudMultiAgentExecuteStreamingRequestSchema
+export const CloudAgentExecuteStreamingRequestSchema = CloudAgentExecuteRequestSchema.extend({
+  stream: z.literal(true),
+});
+export type CloudAgentExecuteStreamingRequest = z.infer<
+  typeof CloudAgentExecuteStreamingRequestSchema
 >;
 
-export const CloudMultiAgentExecuteNonStreamingRequestSchema =
-  CloudMultiAgentExecuteRequestSchema.extend({
-    stream: z.literal(false).optional(),
-  });
-export type CloudMultiAgentExecuteNonStreamingRequest = z.infer<
-  typeof CloudMultiAgentExecuteNonStreamingRequestSchema
+export const CloudAgentExecuteNonStreamingRequestSchema = CloudAgentExecuteRequestSchema.extend({
+  stream: z.literal(false).optional(),
+});
+export type CloudAgentExecuteNonStreamingRequest = z.infer<
+  typeof CloudAgentExecuteNonStreamingRequestSchema
 >;
