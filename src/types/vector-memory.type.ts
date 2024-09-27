@@ -5,7 +5,7 @@ export const VectorMemorySchema = z.object({
   status: z.string(),
   colName: z.string(),
   embedderId: z.string(),
-  indexName: z.string().optional(),
+  indexName: z.string().nullish(),
   vectorFieldName: z.string(),
   embeddedTextFieldName: z.string(),
   fullTextFieldName: z.string(),

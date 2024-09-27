@@ -7,12 +7,12 @@ export const InputMetadataSchema = TypeSchema.and(
   z.object({
     name: z.string().min(1),
     title: z.string().min(1),
-    description: z.string().min(1).optional(),
+    description: z.string().min(1).nullish(),
     default: z.any().nullable(),
-    advanced: z.boolean().optional(),
-    nsfw: z.boolean().optional(),
-    hidden: z.boolean().optional(),
-    failMode: z.nativeEnum(FailMode).optional(),
+    advanced: z.boolean().nullish(),
+    nsfw: z.boolean().nullish(),
+    hidden: z.boolean().nullish(),
+    failMode: z.nativeEnum(FailMode).nullish(),
   }),
 );
 

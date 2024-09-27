@@ -9,19 +9,19 @@ export type NodeId = z.infer<typeof NodeIdSchema>;
 export const NodeSchema = z.object({
   id: NodeIdSchema,
   name: z.string().min(1),
-  inputs: z.array(NodeInputSchema).optional(),
-  fallbackOutputs: z.array(z.object({ name: z.string().min(1), value: z.any() })).optional(),
+  inputs: z.array(NodeInputSchema).nullish(),
+  fallbackOutputs: z.array(z.object({ name: z.string().min(1), value: z.any() })).nullish(),
   call: z
     .object({
       ref: z.string().min(1).openapi({ example: "{{1.output}}" }),
       description: z.string(),
     })
-    .optional(),
+    .nullish(),
 
   /** @deprecated use call instead */
-  callDescription: z.string().optional(),
+  callDescription: z.string().nullish(),
   /** @deprecated use call instead */
-  inputsRef: z.string().optional(),
+  inputsRef: z.string().nullish(),
 });
 export type Node = z.infer<typeof NodeSchema>;
 

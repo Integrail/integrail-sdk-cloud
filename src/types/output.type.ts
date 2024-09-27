@@ -6,9 +6,9 @@ export const OutputMetadataSchema = TypeSchema.and(
   z.object({
     name: z.string().min(1),
     title: z.string().min(1),
-    description: z.string().min(1).optional(),
-    default: z.any().optional(),
-    saveHistory: z.boolean().optional(),
+    description: z.string().min(1).nullish(),
+    default: z.any().nullish(),
+    saveHistory: z.boolean().nullish(),
   }),
 );
 

@@ -31,7 +31,7 @@ export const InlineAgentSchema = z.object({
   nodes: z.array(NodeSchema),
   mock: z
     .record(NodeExecutionStateSchema.omit({ updatedAt: true, retries: true, inputs: true }))
-    .optional(),
+    .nullish(),
 });
 export type InlineAgent = z.infer<typeof InlineAgentSchema>;
 
