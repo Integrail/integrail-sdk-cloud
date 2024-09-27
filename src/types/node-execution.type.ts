@@ -36,7 +36,7 @@ export enum NodeExecutionStatus {
 export const NodeExecutionStateSchema = z.object({
   status: z.nativeEnum(NodeExecutionStatus),
   inputs: z.record(z.any()).nullish(),
-  outputs: z.record(OutputStateSchema).nullish(),
+  outputs: z.record(OutputStateSchema.nullish()).nullish(),
   updatedAt: z.coerce.date(),
   errors: z.array(z.any()).nullish(),
   message: z.string().nullish(),

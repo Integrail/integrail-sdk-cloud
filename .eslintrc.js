@@ -25,7 +25,14 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: [".*rc.js", "*.config.js", "*.config.mjs", "*.config.mts", "scripts/*"],
+  ignorePatterns: [
+    ".*rc.js",
+    "*.config.js",
+    "*.config.mjs",
+    "*.config.ts",
+    "*.config.mts",
+    "scripts/*",
+  ],
   rules: {
     "@typescript-eslint/explicit-function-return-type": "warn",
     "@typescript-eslint/explicit-module-boundary-types": "off",
