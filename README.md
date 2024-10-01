@@ -1,7 +1,5 @@
 # Integrail SDK
 
-# Integrail SDK
-
 ## Usage
 
 Below is an example of how to initialize the `IntegrailCloudApi` and use streaming versions of its `agent.execute` and `agent.executeMultipart` methods.
