@@ -4,7 +4,7 @@
 
 ## Usage
 
-Below is an example of how to initialize the `IntegrailCloudApi` and use streaming versions of its `agent.execute` and `agent.execute_multipart` methods.
+Below is an example of how to initialize the `IntegrailCloudApi` and use streaming versions of its `agent.execute` and `agent.executeMultipart` methods.
 
 ### Initializing IntegrailCloudApi
 
@@ -39,7 +39,7 @@ cloudApi.agent.execute(
 );
 ```
 
-### Using `agent.execute_multipart`
+### Using `agent.executeMultipart`
 
 ```typescript
 const agentId = "...";
