@@ -33,6 +33,7 @@ export enum TypeName {
 
 export enum ExternalService {
   GOOGLE = "google",
+  NYLAS = "nylas",
   WIX = "wix",
   CLICKUP = "clickup",
   TELEGRAM = "telegram",
