@@ -36,6 +36,16 @@ export namespace List {
     };
   }
 
+  export function filterAsync<A>(
+    predicate: (a: A) => Promise<boolean>,
+  ): (as: Iterable<A>) => AsyncGenerator<A> {
+    return async function* (as) {
+      for (const a of as) {
+        if (await predicate(a)) yield a;
+      }
+    };
+  }
+
   export function reduce<A, Acc>(f: (b: Acc, a: A) => Acc, b: Acc): (as: Iterable<A>) => Acc {
     return function (as) {
       let result = b;
