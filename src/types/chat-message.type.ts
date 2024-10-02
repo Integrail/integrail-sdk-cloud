@@ -9,7 +9,7 @@ export enum ChatMessageRole {
 
 export const ChatMessagePartSchema = ValueSchema.and(
   z.object({
-    name: z.string().optional(),
+    name: z.string().nullish(),
   }),
 );
 export type ChatMessagePart = z.infer<typeof ChatMessagePartSchema>;

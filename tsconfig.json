@@ -3,21 +3,19 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": false,
     "incremental": true,
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noImplicitAny": false,
     "outDir": "./dist",
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "paths": {
       "@/*": ["src/*"]
     },
-    "plugins": [
-      { "transform": "typescript-transform-paths" },
-      { "transform": "typescript-transform-paths", "afterDeclarations": true }
-    ],
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": true,

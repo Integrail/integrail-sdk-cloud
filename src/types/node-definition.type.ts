@@ -4,9 +4,9 @@ import { AgentCategory, AgentSubcategory } from "./category.type";
 import { InputsMetadataSchema } from "./input.type";
 import { OutputsMetadataSchema } from "./output.type";
 
-export type BuiltinAgentName = string;
+export type NodeDefinitionName = string;
 
-export enum BuiltinAgentAvailabilityStatus {
+export enum NodeDefinitionAvailabilityStatus {
   /** Model is fully supported and recommended for use. */
   ACTIVE = "active",
   /** Model no longer receives updates and may be deprecated in the future. */
@@ -18,15 +18,15 @@ export enum BuiltinAgentAvailabilityStatus {
   // RETIRED = "retired",
 }
 
-export const BuiltinAgentAvailabilitySchema = z.object({
-  status: z.nativeEnum(BuiltinAgentAvailabilityStatus),
+export const NodeDefinitionAvailabilitySchema = z.object({
+  status: z.nativeEnum(NodeDefinitionAvailabilityStatus),
   message: z.string().nullish(),
   deprecation: DateStringSchema.nullish(),
   retirement: DateStringSchema.nullish(),
 });
-export type BuiltinAgentAvailability = z.infer<typeof BuiltinAgentAvailabilitySchema>;
+export type NodeDefinitionAvailability = z.infer<typeof NodeDefinitionAvailabilitySchema>;
 
-export const BaseBuiltinAgentSchema = z.object({
+export const BaseNodeDefinitionSchema = z.object({
   name: z.string().min(1),
   title: z.string().min(1),
   shortId: z.string().min(1).max(5).nullish(),
@@ -35,15 +35,15 @@ export const BaseBuiltinAgentSchema = z.object({
   category: z.nativeEnum(AgentCategory),
   subcategory: z.nativeEnum(AgentSubcategory).nullish(),
   hidden: z.boolean().nullish(),
-  availability: BuiltinAgentAvailabilitySchema.default({
-    status: BuiltinAgentAvailabilityStatus.ACTIVE,
+  availability: NodeDefinitionAvailabilitySchema.default({
+    status: NodeDefinitionAvailabilityStatus.ACTIVE,
   }),
   metadata: z.any(),
 });
 
-export const BuiltinAgentSchema = BaseBuiltinAgentSchema.extend({
+export const NodeDefinitionSchema = BaseNodeDefinitionSchema.extend({
   inputs: InputsMetadataSchema,
   outputs: OutputsMetadataSchema,
   // metadata: z.any(),
 });
-export type BuiltinAgent = z.infer<typeof BuiltinAgentSchema>;
+export type NodeDefinition = z.infer<typeof NodeDefinitionSchema>;

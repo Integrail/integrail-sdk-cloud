@@ -3,10 +3,10 @@ import {
   AgentCategory,
   AgentExecution,
   AgentSubcategory,
-  BuiltinAgentSchema,
+  NodeDefinitionSchema,
   ExecutionEvent,
   ExecutionIdSchema,
-  InlineMultiAgentSchema,
+  InlineAgentSchema,
 } from "@/types";
 import { BaseApi, BaseResponseSchema } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
@@ -101,12 +101,12 @@ export type AgentExecutionOptions =
   | AgentExecutionOptionsNonStreaming
   | AgentExecutionOptionsStreaming;
 
-// Builtin agent list.
+// Node definition list.
 
-export const BuiltinAgentListResponseSchema = z.object({ nodes: z.array(BuiltinAgentSchema) });
-export type BuiltinAgentListResponse = z.infer<typeof BuiltinAgentListResponseSchema>;
+export const NodeDefinitionListResponseSchema = z.object({ nodes: z.array(NodeDefinitionSchema) });
+export type NodeDefinitionListResponse = z.infer<typeof NodeDefinitionListResponseSchema>;
 
-// Builtin agent category list.
+// Node definition category list.
 
 export const AgentCategorySchema = z.object({
   name: z.nativeEnum(AgentCategory),
@@ -129,75 +129,67 @@ export type AgentCategoryListResponse = z.infer<typeof AgentCategoryListResponse
 export const BaseNonStreamingRequestSchema = z.object({ stream: z.literal(false).optional() });
 export const BaseStreamingRequestSchema = z.object({ stream: z.literal(true) });
 
-export const BuiltinAgentExecuteRequestSchema = z.object({
+export const SingleNodeExecuteRequestSchema = z.object({
   nodeName: z.string().min(1),
   inputs: z.record(z.any()),
   stream: z.boolean().optional(),
 });
-export type BuiltinAgentExecuteRequest = z.infer<typeof BuiltinAgentExecuteRequestSchema>;
+export type SingleNodeExecuteRequest = z.infer<typeof SingleNodeExecuteRequestSchema>;
 
-export const BuiltinAgentExecuteStreamingRequestSchema = BuiltinAgentExecuteRequestSchema.and(
+export const SingleNodeExecuteStreamingRequestSchema = SingleNodeExecuteRequestSchema.and(
   z.object({
     stream: z.literal(true),
   }),
 );
-export type BuiltinAgentExecuteStreamingRequest = z.infer<typeof BuiltinAgentExecuteRequestSchema>;
+export type SingleNodeExecuteStreamingRequest = z.infer<typeof SingleNodeExecuteRequestSchema>;
 
-export const BuiltinAgentExecuteNonStreamingRequestSchema = BuiltinAgentExecuteRequestSchema.and(
+export const SingleNodeExecuteNonStreamingRequestSchema = SingleNodeExecuteRequestSchema.and(
   z.object({
     stream: z.literal(false).optional(),
   }),
 );
-export type BuiltinAgentExecuteNonStreamingRequest = z.infer<
-  typeof BuiltinAgentExecuteRequestSchema
->;
+export type SingleNodeExecuteNonStreamingRequest = z.infer<typeof SingleNodeExecuteRequestSchema>;
 
-export const MultiAgentExecuteRequestSchema = z.object({
+export const AgentExecuteRequestSchema = z.object({
   inputs: z.record(z.any()),
   stream: z.boolean().optional(),
 });
-export type MultiAgentExecuteRequest = z.infer<typeof MultiAgentExecuteRequestSchema>;
+export type AgentExecuteRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
-export const MultiAgentExecuteStreamingRequestSchema = MultiAgentExecuteRequestSchema.and(
+export const AgentExecuteStreamingRequestSchema = AgentExecuteRequestSchema.and(
   z.object({
     stream: z.literal(true),
   }),
 );
-export type MultiAgentExecuteStreamingRequest = z.infer<typeof MultiAgentExecuteRequestSchema>;
+export type AgentExecuteStreamingRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
-export const MultiAgentExecuteNonStreamingRequestSchema = MultiAgentExecuteRequestSchema.and(
+export const AgentExecuteNonStreamingRequestSchema = AgentExecuteRequestSchema.and(
   z.object({
     stream: z.literal(false).optional(),
   }),
 );
-export type MultiAgentExecuteNonStreamingRequest = z.infer<typeof MultiAgentExecuteRequestSchema>;
+export type AgentExecuteNonStreamingRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
-export const MultiAgentExecuteInlineRequestSchema = z.object({
+export const AgentExecuteInlineRequestSchema = z.object({
   inputs: z.record(z.any()),
-  pipeline: InlineMultiAgentSchema,
+  pipeline: InlineAgentSchema,
   stream: z.boolean().optional(),
 });
-export type MultiAgentExecuteInlineRequest = z.infer<typeof MultiAgentExecuteInlineRequestSchema>;
+export type AgentExecuteInlineRequest = z.infer<typeof AgentExecuteInlineRequestSchema>;
 
-export const MultiAgentExecuteInlineStreamingRequestSchema =
-  MultiAgentExecuteInlineRequestSchema.and(
-    z.object({
-      stream: z.literal(true),
-    }),
-  );
-export type MultiAgentExecuteInlineStreamingRequest = z.infer<
-  typeof MultiAgentExecuteInlineRequestSchema
->;
+export const AgentExecuteInlineStreamingRequestSchema = AgentExecuteInlineRequestSchema.and(
+  z.object({
+    stream: z.literal(true),
+  }),
+);
+export type AgentExecuteInlineStreamingRequest = z.infer<typeof AgentExecuteInlineRequestSchema>;
 
-export const MultiAgentExecuteInlineNonStreamingRequestSchema =
-  MultiAgentExecuteInlineRequestSchema.and(
-    z.object({
-      stream: z.literal(false).optional(),
-    }),
-  );
-export type MultiAgentExecuteInlineNonStreamingRequest = z.infer<
-  typeof MultiAgentExecuteInlineRequestSchema
->;
+export const AgentExecuteInlineNonStreamingRequestSchema = AgentExecuteInlineRequestSchema.and(
+  z.object({
+    stream: z.literal(false).optional(),
+  }),
+);
+export type AgentExecuteInlineNonStreamingRequest = z.infer<typeof AgentExecuteInlineRequestSchema>;
 
 export const AgentExecuteNonStreamingResponseSchema = BaseResponseSchema.extend({
   executionId: ExecutionIdSchema,

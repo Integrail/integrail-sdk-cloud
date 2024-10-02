@@ -53,19 +53,19 @@ export const TypePrimitiveSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal(TypeName.BOOLEAN) }),
   z.object({
     type: z.literal(TypeName.NUMBER),
-    min: z.number().optional(),
-    max: z.number().optional(),
+    min: z.number().nullish(),
+    max: z.number().nullish(),
   }),
   z.object({
     type: z.literal(TypeName.INTEGER),
-    min: z.number().int().optional(),
-    max: z.number().int().optional(),
+    min: z.number().int().nullish(),
+    max: z.number().int().nullish(),
   }),
   z.object({
     type: z.literal(TypeName.STRING),
-    min: z.number().int().optional(),
-    max: z.number().int().optional(),
-    truncate: z.boolean().optional(),
+    min: z.number().int().nullish(),
+    max: z.number().int().nullish(),
+    truncate: z.boolean().nullish(),
   }),
   z.object({ type: z.literal(TypeName.ENUM), variants: z.array(z.string()) }),
   z.object({ type: z.literal(TypeName.VECTOR), size: z.number().int().min(1) }),
@@ -83,10 +83,10 @@ export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("t
   z.object({
     type: z.literal(TypeName.LIST),
     elements: z.lazy(() => TypeSchema),
-    size: z.union([z.number().int(), InputRefSchema]).optional(),
-    defaultLimit: z.number().int().nonnegative().optional(),
-    min: z.number().int().nonnegative().optional(),
-    max: z.number().int().nonnegative().optional(),
+    size: z.union([z.number().int(), InputRefSchema]).nullish(),
+    defaultLimit: z.number().int().nonnegative().nullish(),
+    min: z.number().int().nonnegative().nullish(),
+    max: z.number().int().nonnegative().nullish(),
   }),
   z.object({ type: z.literal(TypeName.DICT), elements: z.lazy(() => TypeSchema) }),
   z.object({
@@ -100,10 +100,10 @@ export type TypeComplex =
   | {
       type: TypeName.LIST;
       elements: Type;
-      size?: number | InputRef;
-      min?: number;
-      max?: number;
-      defaultLimit?: number;
+      size?: number | InputRef | null;
+      min?: number | null;
+      max?: number | null;
+      defaultLimit?: number | null;
     }
   | { type: TypeName.DICT; elements: Type }
   | { type: TypeName.ONE_OF; variants: Type[] }
@@ -137,7 +137,7 @@ export const TypeSchema = z
     TypeRefSchema,
     TypeExternalSchema,
   ])
-  .and(z.object({ optional: z.boolean().optional() }));
+  .and(z.object({ optional: z.boolean().nullish() }));
 export type Type = z.infer<typeof TypeSchema>;
 
 export namespace Type {

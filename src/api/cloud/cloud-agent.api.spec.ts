@@ -2,19 +2,19 @@
 import fetchMock from "jest-fetch-mock";
 
 import {
-  CloudMultiAgentApi,
-  CloudMultiAgentExecuteNonStreamingRequest,
-  CloudMultiAgentExecuteStreamingRequest,
+  CloudAgentApi,
+  CloudAgentExecuteNonStreamingRequest,
+  CloudAgentExecuteStreamingRequest,
 } from "@/api/cloud/cloud-agent.api";
 import { AgentExecuteNonStreamingResponse } from "@/api/common/agent.api";
 import { MockReadableStream } from "@/api/cloud/mocks/readable-stream.mock";
 import { ExecutionEvent, ExecutionEventOp } from "@/types/execution.type";
-import { MultiAgentId } from "@/types/multi-agent.type";
+import { AgentId } from "@/types/agent.type";
 import { AccountId } from "@/types/account.type";
 import "@/polyfills/AbortController";
 
-describe("CloudMultiAgentApi", () => {
-  let api: CloudMultiAgentApi;
+describe("CloudAgentApi", () => {
+  let api: CloudAgentApi;
   const executionId = "exec1";
 
   const events: ExecutionEvent[] = [
@@ -26,7 +26,7 @@ describe("CloudMultiAgentApi", () => {
   ];
 
   beforeEach(() => {
-    api = new CloudMultiAgentApi({
+    api = new CloudAgentApi({
       baseUri: "http://localhost",
       apiToken: "token",
     });
@@ -39,9 +39,9 @@ describe("CloudMultiAgentApi", () => {
   });
 
   test("should execute non-streaming request", async () => {
-    const agentId: MultiAgentId = "agent1";
+    const agentId: AgentId = "agent1";
     const accountId: AccountId = "account1";
-    const payload: CloudMultiAgentExecuteNonStreamingRequest = {
+    const payload: CloudAgentExecuteNonStreamingRequest = {
       stream: false,
       inputs: [],
     };
@@ -58,9 +58,9 @@ describe("CloudMultiAgentApi", () => {
   });
 
   test("should execute streaming request", async () => {
-    const agentId: MultiAgentId = "agent1";
+    const agentId: AgentId = "agent1";
     const accountId: AccountId = "account1";
-    const payload: CloudMultiAgentExecuteStreamingRequest = {
+    const payload: CloudAgentExecuteStreamingRequest = {
       stream: true,
       inputs: [],
     };
@@ -89,9 +89,9 @@ describe("CloudMultiAgentApi", () => {
   });
 
   test("should cancel execution", async () => {
-    const agentId: MultiAgentId = "agent1";
+    const agentId: AgentId = "agent1";
     const accountId: AccountId = "account1";
-    const payload: CloudMultiAgentExecuteStreamingRequest = {
+    const payload: CloudAgentExecuteStreamingRequest = {
       stream: true,
       inputs: {},
     };
