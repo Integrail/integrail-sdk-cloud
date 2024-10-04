@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   build: {
+    target: "es2021",
     lib: {
       entry: fg.globSync(path.resolve(__dirname, "src/**/*.ts")),
       name: "[name].js",
