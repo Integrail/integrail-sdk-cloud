@@ -5,22 +5,24 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: read
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js 22.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22.x
-        cache: 'npm'
-    - run: npm ci
-    - run: npm pack
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: integrail-sdk-cloud-*.tgz
-        repository: Integrail/integrail-sdk-cloud
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: "npm"
+      - run: npm ci
+      - run: npm pack
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: integrail-sdk-cloud-*.tgz
+          repository: Integrail/integrail-sdk-cloud
