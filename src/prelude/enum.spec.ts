@@ -30,5 +30,24 @@ describe("Enum", () => {
     const dog = AnimalVariant.get(Animal.DOG);
     expect(dog.name).toBe("dog");
     expect(dog.sound).toBe("bark");
+
+    expect(
+      AnimalVariant.match(Animal.CAT, {
+        [Animal.CAT]: () => "meow!",
+        [Animal.DOG]: () => "bark!",
+        [Animal.COW]: () => "moo!",
+      }),
+    ).toBe("meow!");
+
+    expect(() => {
+      AnimalVariant.match("invalid" as Animal, {
+        [Animal.CAT]: () => "meow!",
+        [Animal.DOG]: () => "bark!",
+        [Animal.COW]: () => "moo!",
+      });
+    }).toThrow();
+
+    expect(AnimalVariant.match(Animal.COW, {}, () => "*silence*")).toBe("*silence*");
+    expect(AnimalVariant.match("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
   });
 });

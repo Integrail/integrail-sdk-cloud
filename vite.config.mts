@@ -28,7 +28,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    dts(),
+    dts({ tsconfigPath: "./tsconfig.json" }),
     external({
       nodeBuiltins: true,
       externalizeDeps: Object.keys(pkg.dependencies),

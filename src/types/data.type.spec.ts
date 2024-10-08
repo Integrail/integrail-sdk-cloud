@@ -1,12 +1,16 @@
-import Ajv from "ajv";
+import { Validator } from "jsonschema";
 
 import { Type, TypeName } from "./data.type";
 
-const ajv = new Ajv();
+const v = new Validator();
 
 describe("data.type", () => {
   describe("Type.toJSONSchema", () => {
     it("should generate a valid JSON schema", async () => {
+      const metaSchema = await fetch("https://json-schema.org/draft-07/schema").then((r) =>
+        r.json(),
+      );
+
       const t: Type = {
         type: TypeName.OBJECT,
         properties: {
@@ -29,9 +33,9 @@ describe("data.type", () => {
         },
       };
       const schema = Type.toJSONSchema(t);
-      const isValidSchema = ajv.validateSchema(schema);
-      expect(ajv.errors).toBe(null);
-      expect(isValidSchema).toBe(true);
+
+      const result = v.validate(schema, metaSchema);
+      expect(result.errors.length).toBe(0);
     });
   });
 });

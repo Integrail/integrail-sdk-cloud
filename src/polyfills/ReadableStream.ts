@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 if (typeof ReadableStream !== "undefined") {
   if (ReadableStream.prototype.values == null)
     ReadableStream.prototype.values = function ({

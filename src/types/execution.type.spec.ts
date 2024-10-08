@@ -108,10 +108,10 @@ describe("execution.type", () => {
       expect(execution.events).toHaveLength(0);
       expect(execution.status).toBe(AgentExecutionStatus.FINISHED);
       expect(execution.state[NODE1_ID].status).toBe(NodeExecutionStatus.FINISHED);
-      expect(execution.state[NODE1_ID].outputs![OUTPUT1_NAME].status).toBe(
+      expect(execution.state[NODE1_ID].outputs![OUTPUT1_NAME]?.status).toBe(
         OutputStateStatus.FINISHED,
       );
-      const outputValue = execution.state[NODE1_ID].outputs![OUTPUT1_NAME].value;
+      const outputValue = execution.state[NODE1_ID].outputs![OUTPUT1_NAME]?.value;
       expect(outputValue).toBe(
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
       );
