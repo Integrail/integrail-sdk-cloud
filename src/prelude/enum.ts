@@ -69,7 +69,7 @@ export namespace Enum {
   export function of<ValueKey extends string, Variant extends object>(): {
     create: <Value extends string, E extends Rec<string, Variant & { [vk in ValueKey]: Value }>>(
       e: E,
-    ) => E;
+    ) => { [k in keyof E]: E[k] & Variant };
   } {
     return {
       create: (e) => e,
