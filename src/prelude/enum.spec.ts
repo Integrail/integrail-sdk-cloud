@@ -25,14 +25,14 @@ describe("Enum", () => {
     expect(Animal.COW).toBe("cow");
 
     type AnimalVariant = Enum.Variant<"name", typeof AnimalEnum>;
-    const AnimalVariant = Enum.variant("name", AnimalEnum);
+    const AnimalHandler = Enum.handler("name", AnimalEnum);
 
-    const dog = AnimalVariant.get(Animal.DOG);
+    const dog: AnimalVariant = AnimalHandler.get(Animal.DOG);
     expect(dog.name).toBe("dog");
     expect(dog.sound).toBe("bark");
 
     expect(
-      AnimalVariant.match(Animal.CAT, {
+      AnimalHandler.matchValue(Animal.CAT, {
         [Animal.CAT]: () => "meow!",
         [Animal.DOG]: () => "bark!",
         [Animal.COW]: () => "moo!",
@@ -40,15 +40,15 @@ describe("Enum", () => {
     ).toBe("meow!");
 
     expect(() => {
-      AnimalVariant.match("invalid" as Animal, {
+      AnimalHandler.matchValue("invalid" as Animal, {
         [Animal.CAT]: () => "meow!",
         [Animal.DOG]: () => "bark!",
         [Animal.COW]: () => "moo!",
       });
     }).toThrow();
 
-    expect(AnimalVariant.match(Animal.COW, {}, () => "*silence*")).toBe("*silence*");
-    expect(AnimalVariant.match("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
+    expect(AnimalHandler.matchValue(Animal.COW, {}, () => "*silence*")).toBe("*silence*");
+    expect(AnimalHandler.matchValue("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
   });
 
   it("should convert native enums to custom enums", () => {
@@ -61,23 +61,23 @@ describe("Enum", () => {
     const AnimalEnum = Enum.fromNative(Animal);
     expect(AnimalEnum.CAT.name).toBe("cat");
 
-    const AnimalVariant = Enum.variantFromNative(Animal);
-    expect(AnimalVariant.get(Animal.CAT)).toEqual({ name: "cat" });
+    const AnimalHandler = Enum.handlerFromNative(Animal);
+    expect(AnimalHandler.get(Animal.CAT)).toEqual({ name: "cat" });
 
     expect(
-      AnimalVariant.match(Animal.CAT, {
+      AnimalHandler.matchValue(Animal.CAT, {
         [Animal.CAT]: () => "meow!",
         [Animal.DOG]: () => "bark!",
         [Animal.COW]: () => "moo!",
       }),
     ).toBe("meow!");
     expect(() => {
-      AnimalVariant.match("invalid" as Animal, {
+      AnimalHandler.matchValue("invalid" as Animal, {
         [Animal.CAT]: () => "meow!",
         [Animal.DOG]: () => "bark!",
         [Animal.COW]: () => "moo!",
       });
     }).toThrow();
-    expect(AnimalVariant.match("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
+    expect(AnimalHandler.matchValue("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
   });
 });

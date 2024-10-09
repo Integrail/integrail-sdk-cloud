@@ -1,7 +1,7 @@
 import { Rec } from "./rec";
 
 export namespace Enum {
-  export class VariantWrapper<ValueKey extends string, E extends Rec<string, any>> {
+  export class Handler<ValueKey extends string, E extends Rec<string, any>> {
     constructor(
       private vk: ValueKey,
       private e: E,
@@ -20,22 +20,42 @@ export namespace Enum {
       return null;
     }
 
-    match<R>(
+    matchValue<R>(
       value: Value<ValueKey, E>,
       matcher: Matcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
     ): R;
-    match<R>(
+    matchValue<R>(
       value: Value<ValueKey, E>,
       matcher: PartialMatcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
       def: () => R,
     ): R;
-    match<R>(
+    matchValue<R>(
       value: Value<ValueKey, E>,
       matcher: PartialMatcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
       def?: () => R,
     ): R {
       const variant = this.getNullable(value);
       if (variant != null && matcher[value] != null) return matcher[value](variant);
+      if (def != null) return def();
+      throw new Error(`Invalid value: ${value}`);
+    }
+
+    matchVariant<R>(
+      variant: Variant<ValueKey, E>,
+      matcher: Matcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
+    ): R;
+    matchVariant<R>(
+      variant: Variant<ValueKey, E>,
+      matcher: PartialMatcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
+      def: () => R,
+    ): R;
+    matchVariant<R>(
+      variant: Variant<ValueKey, E>,
+      matcher: PartialMatcher<Value<ValueKey, E>, Variant<ValueKey, E>, R>,
+      def?: () => R,
+    ): R {
+      const value = variant[this.vk];
+      if (matcher[value] != null) return matcher[value](variant);
       if (def != null) return def();
       throw new Error(`Invalid value: ${value}`);
     }
@@ -76,11 +96,11 @@ export namespace Enum {
     return Rec.map(([k, v]: [string, any]) => [k, v[vk]])(e) as any;
   }
 
-  export function variant<ValueKey extends string, E extends Rec<string, any>>(
+  export function handler<ValueKey extends string, E extends Rec<string, any>>(
     vk: ValueKey,
     e: E,
-  ): VariantWrapper<ValueKey, E> {
-    return new VariantWrapper(vk, e);
+  ): Handler<ValueKey, E> {
+    return new Handler(vk, e);
   }
 
   export function fromNative<E extends Rec<string, any>>(
@@ -92,12 +112,9 @@ export namespace Enum {
     >;
   }
 
-  export function variantFromNative<E extends Rec<string, any>>(
+  export function handlerFromNative<E extends Rec<string, any>>(
     native: E,
-  ): VariantWrapper<"name", Record<keyof E, { name: E[keyof E] }>> {
-    return new VariantWrapper<"name", Record<keyof E, { name: E[keyof E] }>>(
-      "name",
-      fromNative(native),
-    );
+  ): Handler<"name", Record<keyof E, { name: E[keyof E] }>> {
+    return new Handler<"name", Record<keyof E, { name: E[keyof E] }>>("name", fromNative(native));
   }
 }
