@@ -50,4 +50,34 @@ describe("Enum", () => {
     expect(AnimalVariant.match(Animal.COW, {}, () => "*silence*")).toBe("*silence*");
     expect(AnimalVariant.match("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
   });
+
+  it("should convert native enums to custom enums", () => {
+    enum Animal {
+      CAT = "cat",
+      DOG = "dog",
+      COW = "cow",
+    }
+
+    const AnimalEnum = Enum.fromNative(Animal);
+    expect(AnimalEnum.CAT.name).toBe("cat");
+
+    const AnimalVariant = Enum.variant("name", AnimalEnum);
+    expect(AnimalVariant.get(Animal.CAT)).toEqual({ name: "cat" });
+
+    expect(
+      AnimalVariant.match(Animal.CAT, {
+        [Animal.CAT]: () => "meow!",
+        [Animal.DOG]: () => "bark!",
+        [Animal.COW]: () => "moo!",
+      }),
+    ).toBe("meow!");
+    expect(() => {
+      AnimalVariant.match("invalid" as Animal, {
+        [Animal.CAT]: () => "meow!",
+        [Animal.DOG]: () => "bark!",
+        [Animal.COW]: () => "moo!",
+      });
+    }).toThrow();
+    expect(AnimalVariant.match("invalid" as Animal, {}, () => "*silence*")).toBe("*silence*");
+  });
 });

@@ -83,19 +83,12 @@ export namespace Enum {
     return new VariantWrapper(vk, e);
   }
 
-  // export function wrapper<ValueKey extends string, E extends Rec<any, any>>(
-  //   vk: ValueKey,
-  //   e: E,
-  // ): { get: <Value extends Enum.Value<ValueKey, E>>(value: Value) => Enum.Variant<ValueKey, E> } {
-  //   return {
-  //     get: <Value extends Enum.Value<ValueKey, E>>(value: Value): Enum.Variant<ValueKey, E> => {
-  //       for (const k in e) {
-  //         if (e[k][vk] === value) {
-  //           return e[k] as Enum.Variant<ValueKey, E>;
-  //         }
-  //       }
-  //       throw new Error(`Invalid value: ${value}`);
-  //     },
-  //   };
-  // }
+  export function fromNative<E extends Rec<string, any>>(
+    native: E,
+  ): Record<keyof E, { name: E[keyof E] }> {
+    return Rec.map(([k, v]: [string, any]) => [k, { name: v }])(native) as Record<
+      keyof E,
+      { name: E[keyof E] }
+    >;
+  }
 }
