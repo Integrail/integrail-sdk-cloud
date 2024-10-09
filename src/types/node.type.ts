@@ -17,6 +17,8 @@ export const NodeSchema = z.object({
       description: z.string(),
     })
     .nullish(),
+  maxRetries: z.number().int().nonnegative().nullish(),
+  retryDelayMs: z.number().int().min(100).max(30000).nullish(),
 
   /** @deprecated use call instead */
   callDescription: z.string().nullish(),
