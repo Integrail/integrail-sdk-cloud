@@ -61,7 +61,7 @@ describe("Enum", () => {
     const AnimalEnum = Enum.fromNative(Animal);
     expect(AnimalEnum.CAT.name).toBe("cat");
 
-    const AnimalVariant = Enum.variant("name", AnimalEnum);
+    const AnimalVariant = Enum.variantFromNative(Animal);
     expect(AnimalVariant.get(Animal.CAT)).toEqual({ name: "cat" });
 
     expect(

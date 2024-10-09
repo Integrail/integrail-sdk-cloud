@@ -91,4 +91,13 @@ export namespace Enum {
       { name: E[keyof E] }
     >;
   }
+
+  export function variantFromNative<E extends Rec<string, any>>(
+    native: E,
+  ): VariantWrapper<"name", Record<keyof E, { name: E[keyof E] }>> {
+    return new VariantWrapper<"name", Record<keyof E, { name: E[keyof E] }>>(
+      "name",
+      fromNative(native),
+    );
+  }
 }
