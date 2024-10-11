@@ -10,6 +10,7 @@ export enum TypeName {
   VECTOR = "vector",
 
   // Complex types.
+  SIGNAL = "signal",
   OBJECT = "object",
   LIST = "list",
   DICT = "dict",
@@ -75,6 +76,10 @@ export type TypePrimitive = z.infer<typeof TypePrimitiveSchema>;
 
 export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("type", [
   z.object({
+    type: z.literal(TypeName.SIGNAL),
+    elements: z.lazy(() => TypeSchema),
+  }),
+  z.object({
     type: z.literal(TypeName.OBJECT),
     properties: z.record(
       z.string(),
@@ -97,6 +102,7 @@ export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("t
   z.object({ type: z.literal(TypeName.ANY) }),
 ]);
 export type TypeComplex =
+  | { type: TypeName.SIGNAL; elements: Type }
   | { type: TypeName.OBJECT; properties: Record<string, Type> }
   | {
       type: TypeName.LIST;
@@ -156,6 +162,8 @@ export namespace Type {
         return { type: "string", enum: t.variants };
       case TypeName.VECTOR:
         return { type: "array", items: { type: "number" }, minItems: t.size, maxItems: t.size };
+      case TypeName.SIGNAL:
+        return toJSONSchema(t.elements);
       case TypeName.OBJECT:
         return {
           type: "object",
