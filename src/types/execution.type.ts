@@ -41,6 +41,7 @@ export enum ExecutionEventOp {
   // Node output level.
   NODE_OUTPUT_UPDATE_STATUS = "node.output.updateStatus",
   NODE_OUTPUT_UPDATE = "node.output.update",
+  NODE_OUTPUT_SIGNAL = "node.output.signal",
 }
 
 const InitEventSchema = BaseEventSchema.extend({
@@ -92,9 +93,16 @@ const NodeOutputUpdateEventSchema = BaseEventSchema.extend({
   value: z.any(),
   append: z.boolean().nullish(),
 });
+const NodeOutputSignalEventSchema = BaseEventSchema.extend({
+  op: z.literal(ExecutionEventOp.NODE_OUTPUT_SIGNAL),
+  nodeId: z.string().min(1),
+  output: z.string().min(1),
+  value: z.any(),
+});
 const NodeOutputEventSchema = z.discriminatedUnion("op", [
   NodeOutputUpdateStatusEventSchema,
   NodeOutputUpdateEventSchema,
+  NodeOutputSignalEventSchema,
 ]);
 type NodeOutputEvent = z.infer<typeof NodeOutputEventSchema>;
 
@@ -112,6 +120,7 @@ export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Node output level.
   NodeOutputUpdateEventSchema,
   NodeOutputUpdateStatusEventSchema,
+  NodeOutputSignalEventSchema,
 ]);
 export type ExecutionEvent = z.infer<typeof ExecutionEventSchema>;
 
@@ -269,6 +278,8 @@ export namespace AgentExecution {
       case ExecutionEventOp.NODE_OUTPUT_UPDATE_STATUS:
       case ExecutionEventOp.NODE_OUTPUT_UPDATE:
         return applyNodeOutputEvent(execution, event);
+      case ExecutionEventOp.NODE_OUTPUT_SIGNAL:
+        return execution;
     }
   }
 
@@ -356,6 +367,8 @@ export namespace AgentExecution {
               status: event.status,
               value: event.value,
             };
+          case ExecutionEventOp.NODE_OUTPUT_SIGNAL:
+            return outputState;
         }
       },
       () => event.createdAt,
