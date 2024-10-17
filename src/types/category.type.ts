@@ -62,6 +62,18 @@ export const AgentSubcategoryEnum = Enum.of<
     description: "Converts text to image.",
     category: AgentCategory.TTI,
   },
+  TTS: {
+    name: "tts",
+    title: "Text to speech",
+    description: "Converts text to speech.",
+    category: AgentCategory.TTS,
+  },
+  STT: {
+    name: "stt",
+    title: "Speech to text",
+    description: "Converts speech to text.",
+    category: AgentCategory.STT,
+  },
   ITV: {
     name: "itv",
     title: "Image to video",
