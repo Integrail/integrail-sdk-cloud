@@ -24,6 +24,7 @@ export enum AgentExecutionStatus {
 }
 
 export const BaseEventSchema = z.object({
+  executionId: ExecutionIdSchema,
   createdAt: z.coerce.date(),
 });
 
@@ -272,6 +273,7 @@ export namespace AgentExecution {
   }
 
   export function applyEvent(execution: AgentExecution, event: ExecutionEvent): AgentExecution {
+    if (execution._id !== event.executionId) return execution;
     switch (event.op) {
       case ExecutionEventOp.INIT:
         return init(event);
