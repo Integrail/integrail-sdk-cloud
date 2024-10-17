@@ -30,7 +30,6 @@ export const BaseEventSchema = z.object({
 export enum ExecutionEventOp {
   // Agent level.
   INIT = "init",
-  PING = "ping",
   UPDATE_STATUS = "updateStatus",
 
   // Agent output level.
@@ -43,6 +42,8 @@ export enum ExecutionEventOp {
   NODE_OUTPUT_UPDATE_STATUS = "node.output.updateStatus",
   NODE_OUTPUT_UPDATE = "node.output.update",
   NODE_OUTPUT_SIGNAL = "node.output.signal",
+
+  PING = "ping",
 }
 
 const InitEventSchema = BaseEventSchema.extend({
@@ -59,7 +60,7 @@ const UpdateStatusEventSchema = BaseEventSchema.extend({
 const PingEventSchema = BaseEventSchema.extend({
   op: z.literal(ExecutionEventOp.PING),
 });
-const AgentEventSchema = z.discriminatedUnion("op", [InitEventSchema, UpdateStatusEventSchema, PingEventSchema]);
+const AgentEventSchema = z.discriminatedUnion("op", [InitEventSchema, UpdateStatusEventSchema]);
 type AgentEvent = z.infer<typeof AgentEventSchema>;
 
 const OutputUpdateEventSchema = BaseEventSchema.extend({
@@ -113,7 +114,6 @@ type NodeOutputEvent = z.infer<typeof NodeOutputEventSchema>;
 export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Agent level.
   InitEventSchema,
-  PingEventSchema,
   UpdateStatusEventSchema,
 
   // Agent output level.
@@ -126,6 +126,8 @@ export const ExecutionEventSchema = z.discriminatedUnion("op", [
   NodeOutputUpdateEventSchema,
   NodeOutputUpdateStatusEventSchema,
   NodeOutputSignalEventSchema,
+
+  PingEventSchema,
 ]);
 export type ExecutionEvent = z.infer<typeof ExecutionEventSchema>;
 
@@ -284,6 +286,8 @@ export namespace AgentExecution {
       case ExecutionEventOp.NODE_OUTPUT_UPDATE:
         return applyNodeOutputEvent(execution, event);
       case ExecutionEventOp.NODE_OUTPUT_SIGNAL:
+        return execution;
+      case ExecutionEventOp.PING:
         return execution;
     }
   }
