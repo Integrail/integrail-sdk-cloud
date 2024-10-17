@@ -51,8 +51,7 @@ const InitEventSchema = BaseEventSchema.extend({
   execution: z.any(),
 });
 const PingEventSchema = BaseEventSchema.extend({
-  op: z.literal(ExecutionEventOp.PING),
-  execution: z.any(),
+  op: z.literal(ExecutionEventOp.PING)
 });
 type InitEvent = z.infer<typeof InitEventSchema>;
 const UpdateStatusEventSchema = BaseEventSchema.extend({
