@@ -30,6 +30,7 @@ export const BaseEventSchema = z.object({
 export enum ExecutionEventOp {
   // Agent level.
   INIT = "init",
+  PING = "ping",
   UPDATE_STATUS = "updateStatus",
 
   // Agent output level.
@@ -46,6 +47,10 @@ export enum ExecutionEventOp {
 
 const InitEventSchema = BaseEventSchema.extend({
   op: z.literal(ExecutionEventOp.INIT),
+  execution: z.any(),
+});
+const PingEventSchema = BaseEventSchema.extend({
+  op: z.literal(ExecutionEventOp.PING),
   execution: z.any(),
 });
 type InitEvent = z.infer<typeof InitEventSchema>;
@@ -109,6 +114,7 @@ type NodeOutputEvent = z.infer<typeof NodeOutputEventSchema>;
 export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Agent level.
   InitEventSchema,
+  PingEventSchema,
   UpdateStatusEventSchema,
 
   // Agent output level.
