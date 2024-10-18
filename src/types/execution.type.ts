@@ -115,7 +115,6 @@ type NodeOutputEvent = z.infer<typeof NodeOutputEventSchema>;
 export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Agent level.
   InitEventSchema,
-  PingEventSchema,
   UpdateStatusEventSchema,
 
   // Agent output level.
