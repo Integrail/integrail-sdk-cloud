@@ -35,11 +35,13 @@ describe("execution.type", () => {
         state: {},
         events: [
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.UPDATE_STATUS,
             status: AgentExecutionStatus.RUNNING,
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_OUTPUT_UPDATE_STATUS,
             nodeId: NODE1_ID,
             output: OUTPUT1_NAME,
@@ -47,6 +49,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE1_ID,
             status: NodeExecutionStatus.RUNNING,
@@ -54,6 +57,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_OUTPUT_UPDATE,
             nodeId: NODE1_ID,
             output: OUTPUT1_NAME,
@@ -63,6 +67,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_OUTPUT_UPDATE,
             nodeId: NODE1_ID,
             output: OUTPUT1_NAME,
@@ -72,6 +77,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_OUTPUT_UPDATE,
             nodeId: NODE1_ID,
             output: OUTPUT1_NAME,
@@ -81,6 +87,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_OUTPUT_UPDATE_STATUS,
             nodeId: NODE1_ID,
             output: OUTPUT1_NAME,
@@ -88,6 +95,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE1_ID,
             status: NodeExecutionStatus.FINISHED,
@@ -95,6 +103,7 @@ describe("execution.type", () => {
             retries: 1,
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.UPDATE_STATUS,
             status: AgentExecutionStatus.FINISHED,
             createdAt: now(),
@@ -138,11 +147,13 @@ describe("execution.type", () => {
         state: {},
         events: [
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.UPDATE_STATUS,
             status: AgentExecutionStatus.RUNNING,
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE1_ID,
             status: NodeExecutionStatus.RUNNING,
@@ -150,6 +161,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE1_ID,
             status: NodeExecutionStatus.FINISHED,
@@ -157,6 +169,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE2_ID,
             status: NodeExecutionStatus.RUNNING,
@@ -164,6 +177,7 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.NODE_UPDATE_STATUS,
             nodeId: NODE2_ID,
             status: NodeExecutionStatus.FINISHED,
@@ -171,11 +185,13 @@ describe("execution.type", () => {
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.UPDATE_STATUS,
             status: AgentExecutionStatus.FINISHED,
             createdAt: now(),
           },
           {
+            executionId: EXECUTION1_ID,
             op: ExecutionEventOp.UPDATE_STATUS,
             status: AgentExecutionStatus.FINISHED,
             createdAt: now(),

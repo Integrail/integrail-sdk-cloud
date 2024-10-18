@@ -19,6 +19,7 @@ describe("CloudAgentApi", () => {
 
   const events: ExecutionEvent[] = [
     {
+      executionId,
       op: ExecutionEventOp.INIT,
       execution: { id: executionId },
       createdAt: new Date(),
