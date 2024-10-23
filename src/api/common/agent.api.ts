@@ -7,6 +7,7 @@ import {
   ExecutionEvent,
   ExecutionIdSchema,
   InlineAgentSchema,
+  BaseEventSchema,
 } from "@/types";
 import { BaseApi, BaseResponseSchema } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
@@ -27,8 +28,8 @@ export class BaseAgentApi extends BaseApi {
         signal: abortController.signal,
       });
       let execution: AgentExecution | null = null;
-      void jsonl(response, async (event) => {
-        // const event = ExecutionEventSchema.parse(data);
+      void jsonl(response, async (data) => {
+        const event = BaseEventSchema.parse(data) as ExecutionEvent;
         if (event.op === "init" && execution == null) execution = event.execution;
         else if (execution != null) {
           execution = AgentExecution.applyEvents({
@@ -69,8 +70,8 @@ export class BaseAgentApi extends BaseApi {
         signal: abortController.signal,
       });
       let execution: AgentExecution | null = null;
-      void jsonl(response, async (event) => {
-        // const event = ExecutionEventSchema.parse(data);
+      void jsonl(response, async (data) => {
+        const event = BaseEventSchema.parse(data) as ExecutionEvent;
         if (event.op === "init" && execution == null) execution = event.execution;
         else if (execution != null) {
           execution = AgentExecution.applyEvents({
