@@ -46,6 +46,8 @@ export enum ExternalService {
   FIREWORKS = "fireworks",
   GOOGLE_VERTEX = "google_vertex",
   STABILITY = "stability",
+  AIMLAPI = "aimlapi",
+  BFL = "bfl",
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
