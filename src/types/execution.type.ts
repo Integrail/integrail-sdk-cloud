@@ -289,7 +289,7 @@ export namespace AgentExecution {
         return applyNodeOutputEvent(execution, event);
       case ExecutionEventOp.NODE_OUTPUT_SIGNAL:
         return execution;
-      case ExecutionEventOp.PING:
+      default:
         return execution;
     }
   }
