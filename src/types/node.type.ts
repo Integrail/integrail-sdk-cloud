@@ -1,6 +1,10 @@
 import { z } from "@/prelude/zod";
 
-export const NodeInputSchema = z.object({ name: z.string().min(1), value: z.any() });
+export const NodeInputSchema = z.object({
+  name: z.string().min(1),
+  value: z.any(),
+  literal: z.boolean().nullish(),
+});
 export type NodeInput = z.infer<typeof NodeInputSchema>;
 
 export const NodeIdSchema = z.string().min(1).openapi({ example: "1" });
