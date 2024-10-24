@@ -151,11 +151,15 @@ export namespace Value {
     } else if (typeof value === "string") {
       return { type: TypeName.STRING, value };
     } else if (Array.isArray(value)) {
-      return { type: TypeName.LIST, value: value.map(fromJsValue) };
+      return { type: TypeName.LIST, value: value.filter((v) => v != null).map(fromJsValue) };
     } else if (value instanceof Object) {
       return {
         type: TypeName.OBJECT,
-        value: Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fromJsValue(v)])),
+        value: Object.fromEntries(
+          Object.entries(value)
+            .filter(([, v]) => v != null)
+            .map(([k, v]) => [k, fromJsValue(v)]),
+        ),
       };
     } else {
       throw new Error(`Invalid value: ${value}`);
