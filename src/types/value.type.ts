@@ -155,7 +155,11 @@ export namespace Value {
     } else if (value instanceof Object) {
       return {
         type: TypeName.OBJECT,
-        value: Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fromJsValue(v)])),
+        value: Object.fromEntries(
+          Object.entries(value)
+            .filter(([, v]) => v != null)
+            .map(([k, v]) => [k, fromJsValue(v)])
+        ),
       };
     } else {
       throw new Error(`Invalid value: ${value}`);
