@@ -128,7 +128,10 @@ export type AgentCategoryListResponse = z.infer<typeof AgentCategoryListResponse
 // Agent execute.
 
 export const BaseNonStreamingRequestSchema = z.object({ stream: z.literal(false).optional() });
-export const BaseStreamingRequestSchema = z.object({ stream: z.literal(true) });
+export const BaseStreamingRequestSchema = z.object({
+  stream: z.literal(true),
+  continueInBackground: z.literal(true).optional(),
+});
 
 export const SingleNodeExecuteRequestSchema = z.object({
   nodeName: z.string().min(1),

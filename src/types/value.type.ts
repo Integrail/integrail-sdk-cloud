@@ -158,7 +158,7 @@ export namespace Value {
         value: Object.fromEntries(
           Object.entries(value)
             .filter(([, v]) => v != null)
-            .map(([k, v]) => [k, fromJsValue(v)])
+            .map(([k, v]) => [k, fromJsValue(v)]),
         ),
       };
     } else {
