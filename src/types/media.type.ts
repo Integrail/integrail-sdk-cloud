@@ -7,7 +7,11 @@ export const ImageSchema = z
   .and(z.union([z.object({ url: z.string().url() }), z.object({ base64: z.string() })]));
 export type Image = z.infer<typeof ImageSchema>;
 
-export const AudioSchema = z.object({ type: z.literal(TypeName.AUDIO), url: z.string().url() });
+export const AudioSchema = z.object({
+  type: z.literal(TypeName.AUDIO),
+  url: z.string().url(),
+  variants: z.array(z.string()).optional(),
+});
 export type Audio = z.infer<typeof AudioSchema>;
 
 export const VideoSchema = z.object({ type: z.literal(TypeName.VIDEO), url: z.string().url() });
