@@ -89,6 +89,7 @@ export type VideoValue = z.infer<typeof VideoValueSchema>;
 export const AudioValueSchema = z.object({
   type: z.literal(TypeName.AUDIO),
   url: z.string(),
+  variants: z.array(z.string()).optional(),
 });
 export type AudioValue = z.infer<typeof AudioValueSchema>;
 
