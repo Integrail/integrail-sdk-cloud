@@ -120,7 +120,7 @@ export type TypeComplex =
 
 export const TypeMediaSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal(TypeName.IMAGE) }),
-  z.object({ type: z.literal(TypeName.AUDIO), variants: z.array(z.string()).optional() }),
+  z.object({ type: z.literal(TypeName.AUDIO) }),
   z.object({ type: z.literal(TypeName.VIDEO) }),
   z.object({ type: z.literal(TypeName.THREE_DIMENSIONAL) }),
   z.object({ type: z.literal(TypeName.FILE) }),
