@@ -71,7 +71,7 @@ export const TypePrimitiveSchema = z.discriminatedUnion("type", [
     max: z.number().int().nullish(),
     truncate: z.boolean().nullish(),
   }),
-  z.object({ type: z.literal(TypeName.ENUM), variants: z.array(z.string()) }),
+  z.object({ type: z.literal(TypeName.ENUM), variants: z.array(z.string()).optional() }),
   z.object({ type: z.literal(TypeName.VECTOR), size: z.number().int().min(1) }),
 ]);
 export type TypePrimitive = z.infer<typeof TypePrimitiveSchema>;

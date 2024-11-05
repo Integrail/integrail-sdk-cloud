@@ -10,7 +10,6 @@ export type Image = z.infer<typeof ImageSchema>;
 export const AudioSchema = z.object({
   type: z.literal(TypeName.AUDIO),
   url: z.string().url(),
-  variants: z.array(z.string()).optional(),
 });
 export type Audio = z.infer<typeof AudioSchema>;
 
