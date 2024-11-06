@@ -120,6 +120,7 @@ const LogEventSchema = BaseEventSchema.extend({
   nodeId: z.string().nullish(),
   output: z.string().nullish(),
   message: z.string(),
+  data: z.any().nullish(),
 });
 export type LogEvent = z.infer<typeof LogEventSchema>;
 
