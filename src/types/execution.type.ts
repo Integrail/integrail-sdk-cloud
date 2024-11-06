@@ -121,6 +121,7 @@ const LogEventSchema = BaseEventSchema.extend({
   output: z.string().nullish(),
   message: z.string(),
 });
+export type LogEvent = z.infer<typeof LogEventSchema>;
 
 export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Agent level.
