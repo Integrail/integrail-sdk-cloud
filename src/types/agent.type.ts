@@ -19,7 +19,7 @@ export type AgentInput = z.infer<typeof AgentInputSchema>;
 export const AgentOutputSchema = TypeSchema.and(
   z.object({
     name: z.string().min(1),
-    value: z.string().min(1),
+    value: z.any(),
     saveHistory: z.boolean().nullish(),
   }),
 );
