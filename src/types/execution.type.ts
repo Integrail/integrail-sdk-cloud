@@ -67,6 +67,7 @@ type AgentEvent = z.infer<typeof AgentEventSchema>;
 const OutputUpdateEventSchema = BaseEventSchema.extend({
   op: z.literal(ExecutionEventOp.OUTPUT_UPDATE),
   output: z.string().min(1),
+  path: z.array(z.string()).nullish(),
   value: z.any(),
   append: z.boolean().nullish(),
 });
