@@ -31,3 +31,7 @@ export const ContentTypeEnum = Enum.of<
   // 3D.
   GLB: { name: "model/gltf-binary", category: ContentCategory.THREE_DIMENSIONAL },
 });
+export const ContentTypeName = Enum.toNative("name", ContentTypeEnum);
+export type ContentTypeName = Enum.Value<"name", typeof ContentTypeEnum>;
+export const ContentType = Enum.handler("name", ContentTypeEnum);
+export type ContentType = Enum.Variant<"name", typeof ContentTypeEnum>;
