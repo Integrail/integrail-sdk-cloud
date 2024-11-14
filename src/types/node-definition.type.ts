@@ -32,8 +32,8 @@ export const BaseNodeDefinitionSchema = z.object({
   shortId: z.string().min(1).max(5).nullish(),
   description: z.string().min(1).nullish(),
   url: z.string().url().nullish(),
-  category: z.nativeEnum(AgentCategory),
-  subcategory: z.nativeEnum(AgentSubcategory).nullish(),
+  category: z.string(),
+  subcategory: z.string().nullish(),
   hidden: z.boolean().nullish(),
   availability: NodeDefinitionAvailabilitySchema.default({
     status: NodeDefinitionAvailabilityStatus.ACTIVE,
