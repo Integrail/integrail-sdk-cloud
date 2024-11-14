@@ -45,6 +45,7 @@ export enum ExecutionEventOp {
   NODE_OUTPUT_SIGNAL = "node.output.signal",
 
   PING = "ping",
+  LOG = "log",
 }
 
 const InitEventSchema = BaseEventSchema.extend({
@@ -57,9 +58,6 @@ const UpdateStatusEventSchema = BaseEventSchema.extend({
   status: z.nativeEnum(AgentExecutionStatus),
   message: z.string().nullish(),
   _errors: z.array(z.any()).nullish(),
-});
-const PingEventSchema = BaseEventSchema.extend({
-  op: z.literal(ExecutionEventOp.PING),
 });
 const AgentEventSchema = z.discriminatedUnion("op", [InitEventSchema, UpdateStatusEventSchema]);
 type AgentEvent = z.infer<typeof AgentEventSchema>;
@@ -112,6 +110,20 @@ const NodeOutputEventSchema = z.discriminatedUnion("op", [
 ]);
 type NodeOutputEvent = z.infer<typeof NodeOutputEventSchema>;
 
+const PingEventSchema = BaseEventSchema.extend({
+  op: z.literal(ExecutionEventOp.PING),
+});
+const LogEventSchema = BaseEventSchema.extend({
+  op: z.literal(ExecutionEventOp.LOG),
+  level: z.enum(["error", "warn", "info", "debug"]),
+  statusText: z.enum(["set", "clear"]).nullish(),
+  nodeId: z.string().nullish(),
+  output: z.string().nullish(),
+  message: z.string(),
+  data: z.any().nullish(),
+});
+export type LogEvent = z.infer<typeof LogEventSchema>;
+
 export const ExecutionEventSchema = z.discriminatedUnion("op", [
   // Agent level.
   InitEventSchema,
@@ -129,6 +141,7 @@ export const ExecutionEventSchema = z.discriminatedUnion("op", [
   NodeOutputSignalEventSchema,
 
   PingEventSchema,
+  LogEventSchema,
 ]);
 export type ExecutionEvent = z.infer<typeof ExecutionEventSchema>;
 

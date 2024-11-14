@@ -2,6 +2,7 @@ export * from "./account.type";
 export * from "./agent.type";
 export * from "./category.type";
 export * from "./chat-message.type";
+export * from "./content.type";
 export * from "./data.type";
 export * from "./embedding.type";
 export * from "./execution.type";

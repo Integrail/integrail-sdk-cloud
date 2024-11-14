@@ -110,14 +110,14 @@ export type NodeDefinitionListResponse = z.infer<typeof NodeDefinitionListRespon
 // Node definition category list.
 
 export const AgentCategorySchema = z.object({
-  name: z.nativeEnum(AgentCategory),
+  name: z.string(),
   title: z.string().min(1),
 });
 export const AgentSubcategorySchema = z.object({
-  name: z.nativeEnum(AgentSubcategory),
+  name: z.string().min(1),
   title: z.string().min(1),
   description: z.string().min(1),
-  category: z.nativeEnum(AgentCategory),
+  category: z.string().min(1),
 });
 export const AgentCategoryListResponseSchema = BaseResponseSchema.extend({
   categories: z.array(AgentCategorySchema),

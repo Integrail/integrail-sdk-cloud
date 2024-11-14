@@ -1,5 +1,7 @@
 import { z } from "@/prelude/zod";
 
+import { ContentCategory, ContentTypeEnum } from "./content.type";
+
 export enum TypeName {
   // Primitives.
   BOOLEAN = "boolean",
@@ -48,6 +50,7 @@ export enum ExternalService {
   STABILITY = "stability",
   AIMLAPI = "aimlapi",
   BFL = "bfl",
+  ELEVENLABS = "elevenlabs",
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
@@ -120,7 +123,18 @@ export type TypeComplex =
 
 export const TypeMediaSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal(TypeName.IMAGE) }),
-  z.object({ type: z.literal(TypeName.AUDIO), variants: z.array(z.string()).optional() }),
+  z.object({
+    type: z.literal(TypeName.AUDIO),
+    formats: z
+      .array(z.string())
+      .optional()
+      .describe(
+        Object.values(ContentTypeEnum)
+          .filter((ct) => ct.category === ContentCategory.AUDIO)
+          .map((ct) => ct.name)
+          .join(", "),
+      ),
+  }),
   z.object({ type: z.literal(TypeName.VIDEO) }),
   z.object({ type: z.literal(TypeName.THREE_DIMENSIONAL) }),
   z.object({ type: z.literal(TypeName.FILE) }),

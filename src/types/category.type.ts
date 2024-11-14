@@ -8,6 +8,7 @@ export const AgentCategoryEnum = Enum.of<"name", { title: string }>().create({
   LLM: { name: "llm", title: "LLM" },
   TTS: { name: "tts", title: "Text to Speech" },
   STT: { name: "stt", title: "Speech to Text" },
+  STS: { name: "sts", title: "Speech to Speech" },
   MUSIC: { name: "music", title: "Music" },
   ITT: { name: "itt", title: "Image to Text" },
   TTI: { name: "tti", title: "Text to Image" },
@@ -18,6 +19,7 @@ export const AgentCategoryEnum = Enum.of<"name", { title: string }>().create({
   MISC: { name: "misc", title: "Misc" },
   THREE_DIMENSIONAL: { name: "3d", title: "3D" },
   API: { name: "api", title: "API" },
+  DEPRECATED: { name: "deprecated", title: "Deprecated" },
 });
 
 export const AgentCategory = Enum.toNative("name", AgentCategoryEnum);
@@ -75,6 +77,12 @@ export const AgentSubcategoryEnum = Enum.of<
     title: "Speech to text",
     description: "Converts speech to text.",
     category: AgentCategory.STT,
+  },
+  STS: {
+    name: "sts",
+    title: "Speech to speech",
+    description: "Modifies speech (e.g. changes voice).",
+    category: AgentCategory.STS,
   },
   MUSIC: {
     name: "music",
