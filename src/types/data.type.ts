@@ -133,7 +133,9 @@ export const TypeMediaSchema = z.discriminatedUnion("type", [
           .filter((ct) => ct.category === ContentCategory.AUDIO)
           .map((ct) => ct.name)
           .join(", "),
-      ),
+      )
+      .optional(),
+    maxFileSize: z.number().int().optional().describe("Max audio file size in bytes."),
   }),
   z.object({ type: z.literal(TypeName.VIDEO) }),
   z.object({ type: z.literal(TypeName.THREE_DIMENSIONAL) }),
