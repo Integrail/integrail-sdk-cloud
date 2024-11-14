@@ -68,12 +68,14 @@ export const DictValueSchema: z.ZodType<DictValue> = z.object({
 export const UrlImageValueSchema = z.object({
   type: z.literal(TypeName.IMAGE),
   url: z.string(),
+  contentType: z.string().optional(),
 });
 export type UrlImageValue = z.infer<typeof UrlImageValueSchema>;
 
 export const Base64ImageValueSchema = z.object({
   type: z.literal(TypeName.IMAGE),
   base64: z.string(),
+  contentType: z.string().optional(),
 });
 export type Base64ImageValue = z.infer<typeof Base64ImageValueSchema>;
 
@@ -83,24 +85,28 @@ export type ImageValue = z.infer<typeof ImageValueSchema>;
 export const VideoValueSchema = z.object({
   type: z.literal(TypeName.VIDEO),
   url: z.string(),
+  contentType: z.string().optional(),
 });
 export type VideoValue = z.infer<typeof VideoValueSchema>;
 
 export const AudioValueSchema = z.object({
   type: z.literal(TypeName.AUDIO),
   url: z.string(),
+  contentType: z.string().optional(),
 });
 export type AudioValue = z.infer<typeof AudioValueSchema>;
 
 export const ThreeDimensionalValueSchema = z.object({
   type: z.literal(TypeName.THREE_DIMENSIONAL),
   url: z.string(),
+  contentType: z.string().optional(),
 });
 export type ThreeDimensionalValue = z.infer<typeof ThreeDimensionalValueSchema>;
 
 export const FileValueSchema = z.object({
   type: z.literal(TypeName.FILE),
   url: z.string(),
+  contentType: z.string().optional(),
 });
 export type FileValue = z.infer<typeof FileValueSchema>;
 
