@@ -135,6 +135,7 @@ export const TypeMediaSchema = z.discriminatedUnion("type", [
           .join(", "),
       )
       .optional(),
+    extensions: z.array(z.string()).optional(),
     maxFileSize: z.number().int().optional().describe("Max audio file size in bytes."),
   }),
   z.object({ type: z.literal(TypeName.VIDEO) }),
