@@ -20,6 +20,7 @@ export const AgentCategoryEnum = Enum.of<"name", { title: string }>().create({
   THREE_DIMENSIONAL: { name: "3d", title: "3D" },
   API: { name: "api", title: "API" },
   DEPRECATED: { name: "deprecated", title: "Deprecated" },
+  EXPERIMENTAL: { name: "experimental", title: "Experimental" },
 });
 
 export const AgentCategory = Enum.toNative("name", AgentCategoryEnum);
