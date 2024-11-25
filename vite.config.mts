@@ -16,7 +16,7 @@ export default defineConfig({
   build: {
     target: "es2021",
     lib: {
-      entry: fg.globSync(path.resolve(__dirname, "src/**/*.ts")),
+      entry: fg.globSync("src/**/*.ts", { cwd: __dirname }),
       name: "[name].js",
     },
     rollupOptions: {
