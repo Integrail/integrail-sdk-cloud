@@ -13,6 +13,7 @@ export const ContentTypeEnum = Enum.of<
 >().create({
   // Image.
   JPEG: { name: "image/jpeg", category: ContentCategory.IMAGE, extensions: [".jpg", ".jpeg"] },
+  PNG: { name: "image/png", category: ContentCategory.IMAGE, extensions: [".png"] },
 
   // Audio.
   AAC: { name: "audio/aac", category: ContentCategory.AUDIO, extensions: [".aac"] },
