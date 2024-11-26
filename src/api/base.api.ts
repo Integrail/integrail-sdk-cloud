@@ -41,7 +41,7 @@ export class BaseApi {
 export const BaseResponseSchema = z.object({ status: z.literal("ok").default("ok") });
 
 export const ApiOptionsSchema = z.object({
-  baseUri: z.string().url().default("https://api.integrail.ai"),
+  baseUri: z.string().url().default("https://cloud.integrail.ai"),
   apiToken: z.string(),
   fetch: z.function().optional(),
 });
