@@ -3,7 +3,7 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "scripts": {
     "check": "tsc --noEmit",
     "check:watch": "tsc --noEmit --watch",
@@ -24,6 +24,10 @@
         "default": "./dist/index.mjs",
         "types": "./dist/index.d.ts"
       }
+    },
+    "./package.json": {
+      "require": "./package.json",
+      "import": "./package.json"
     },
     "./api": {
       "require": {
