@@ -30,7 +30,7 @@ export class BaseAgentApi extends BaseApi {
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
-        if (event.op === "init" && execution == null) execution = event.execution;
+        if (event.op === "init") execution = event.execution;
         else if (execution != null) {
           execution = AgentExecution.applyEvents({
             ...execution,
@@ -72,7 +72,7 @@ export class BaseAgentApi extends BaseApi {
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
-        if (event.op === "init" && execution == null) execution = event.execution;
+        if (event.op === "init") execution = event.execution;
         else if (execution != null) {
           execution = AgentExecution.applyEvents({
             ...execution,
