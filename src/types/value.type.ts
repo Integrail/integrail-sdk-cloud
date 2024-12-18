@@ -44,6 +44,7 @@ export const DateTimeValueSchema = z.object({
   type: z.literal(TypeName.DATETIME),
   datetime: z.string(),
 });
+export type DateTimeValue = z.infer<typeof DateTimeValueSchema>;
 
 export type ObjectValue = {
   type: TypeName.OBJECT;
