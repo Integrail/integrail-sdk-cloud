@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 import { z } from "@/prelude/zod";
 
 import { ExternalService, TypeName } from "./data.type";
@@ -31,6 +33,17 @@ export const VectorValueSchema = z.object({
   value: z.array(z.number()),
 });
 export type VectorValue = z.infer<typeof VectorValueSchema>;
+
+export const DateValueSchema = z.object({
+  type: z.literal(TypeName.DATE),
+  date: z.string(),
+});
+export type DateValue = z.infer<typeof DateValueSchema>;
+
+export const DateTimeValueSchema = z.object({
+  type: z.literal(TypeName.DATETIME),
+  datetime: z.string(),
+});
 
 export type ObjectValue = {
   type: TypeName.OBJECT;
@@ -122,6 +135,8 @@ export const ValueSchema = z.union([
   IntegerValueSchema,
   StringValueSchema,
   VectorValueSchema,
+  DateValueSchema,
+  DateTimeValueSchema,
   ObjectValueSchema,
   ListValueSchema,
   DictValueSchema,
@@ -136,6 +151,9 @@ export type Value = z.infer<typeof ValueSchema>;
 
 export namespace Value {
   export function fromJsValue(value: any): Value {
+    if (value instanceof Date)
+      return { type: TypeName.DATETIME, datetime: DateTime.fromJSDate(value).toISO()! };
+
     if (
       typeof value === "object" &&
       "type" in value &&
@@ -179,6 +197,10 @@ export namespace Value {
       case TypeName.INTEGER:
       case TypeName.STRING:
         return value.value;
+      case TypeName.DATE:
+        return DateTime.fromISO(value.date).toJSDate();
+      case TypeName.DATETIME:
+        return DateTime.fromISO(value.datetime).toJSDate();
       case TypeName.LIST:
         return value.value.map(toJsValue);
       case TypeName.VECTOR:
