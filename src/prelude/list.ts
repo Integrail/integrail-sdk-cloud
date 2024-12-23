@@ -26,6 +26,15 @@ export namespace List {
     };
   }
 
+  export function flatMap<A, B>(f: (a: A) => Iterable<B>): (as: Iterable<A>) => Generator<B> {
+    return function* (as) {
+      for (const a of as) {
+        const bs = f(a);
+        for (const b of bs) yield b;
+      }
+    };
+  }
+
   export function filter<A>(predicate: (a: A) => boolean): (as: Iterable<A>) => Generator<A> {
     return function* (as) {
       for (const a of as) {
@@ -71,5 +80,11 @@ export namespace List {
 
   export function toArray<A>(as: Iterable<A>): A[] {
     return [...as];
+  }
+
+  export async function toArrayAsync<A>(as: AsyncIterable<A>): Promise<A[]> {
+    const result: A[] = [];
+    for await (const a of as) result.push(a);
+    return result;
   }
 }
