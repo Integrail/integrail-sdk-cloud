@@ -87,4 +87,12 @@ export namespace List {
     for await (const a of as) result.push(a);
     return result;
   }
+
+  export function sum(as: Iterable<number>): number {
+    return [...as].reduce((a, b) => a + b, 0);
+  }
+
+  export async function sumAsync(as: AsyncIterable<number>): Promise<number> {
+    return [...(await toArrayAsync(as))].reduce((a, b) => a + b, 0);
+  }
 }
