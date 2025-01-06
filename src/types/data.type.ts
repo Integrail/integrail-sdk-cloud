@@ -10,9 +10,10 @@ export enum TypeName {
   STRING = "string",
   ENUM = "enum",
   VECTOR = "vector",
+  DATE = "date",
+  DATETIME = "datetime",
 
   // Complex types.
-  SIGNAL = "signal",
   OBJECT = "object",
   LIST = "list",
   DICT = "dict",
@@ -51,6 +52,7 @@ export enum ExternalService {
   AIMLAPI = "aimlapi",
   BFL = "bfl",
   ELEVENLABS = "elevenlabs",
+  X_AI = "x_ai",
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
@@ -76,14 +78,12 @@ export const TypePrimitiveSchema = z.discriminatedUnion("type", [
   }),
   z.object({ type: z.literal(TypeName.ENUM), variants: z.array(z.string()).optional() }),
   z.object({ type: z.literal(TypeName.VECTOR), size: z.number().int().min(1) }),
+  z.object({ type: z.literal(TypeName.DATE) }),
+  z.object({ type: z.literal(TypeName.DATETIME) }),
 ]);
 export type TypePrimitive = z.infer<typeof TypePrimitiveSchema>;
 
 export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal(TypeName.SIGNAL),
-    elements: z.lazy(() => TypeSchema),
-  }),
   z.object({
     type: z.literal(TypeName.OBJECT),
     properties: z.record(
@@ -107,7 +107,6 @@ export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("t
   z.object({ type: z.literal(TypeName.ANY) }),
 ]);
 export type TypeComplex =
-  | { type: TypeName.SIGNAL; elements: Type }
   | { type: TypeName.OBJECT; properties: Record<string, Type> }
   | {
       type: TypeName.LIST;
@@ -181,8 +180,10 @@ export namespace Type {
         return { type: "string", enum: t.variants };
       case TypeName.VECTOR:
         return { type: "array", items: { type: "number" }, minItems: t.size, maxItems: t.size };
-      case TypeName.SIGNAL:
-        return toJSONSchema(t.elements);
+      case TypeName.DATE:
+        return { type: "object", properties: { date: { type: "string", format: "date" } } };
+      case TypeName.DATETIME:
+        return { type: "object", properties: { date: { type: "string", format: "date-time" } } };
       case TypeName.OBJECT:
         return {
           type: "object",
