@@ -1,6 +1,8 @@
 import { z } from "@/prelude/zod";
 
 export const ExecutionStatsSchema = z.object({
+  model: z.string().nullish(),
+  provider: z.string().nullish(),
   cost: z.number().nonnegative().nullish().openapi({ example: 0.0024, description: "Cost in USD" }),
   inputTokens: z.number().nonnegative().nullish().openapi({ example: 8 }),
   outputTokens: z.number().nonnegative().nullish().openapi({ example: 14 }),
