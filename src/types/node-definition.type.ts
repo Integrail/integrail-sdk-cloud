@@ -1,6 +1,5 @@
 import { DateStringSchema, z } from "@/prelude/zod";
 
-import { AgentCategory, AgentSubcategory } from "./category.type";
 import { InputsMetadataSchema } from "./input.type";
 import { OutputsMetadataSchema } from "./output.type";
 
@@ -35,6 +34,7 @@ export const BaseNodeDefinitionSchema = z.object({
   category: z.string(),
   subcategory: z.string().nullish(),
   hidden: z.boolean().nullish(),
+  tags: z.array(z.string()).nullish(),
   availability: NodeDefinitionAvailabilitySchema.default({
     status: NodeDefinitionAvailabilityStatus.ACTIVE,
   }),
