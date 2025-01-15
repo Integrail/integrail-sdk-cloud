@@ -9,6 +9,7 @@ import {
 } from "@/types";
 import { BaseResponseSchema, BaseApi } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
+import { MiniBaseEventSchema, MiniExecutionEvent } from "@/types/minified.type";
 
 export const ExecutionStatusResponseSchema = BaseResponseSchema.extend({
   execution: AgentExecutionSchema,
@@ -38,6 +39,7 @@ export class CloudExecutionApi extends BaseApi {
       });
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
+        if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
         if (event.op === "init") execution = event.execution;
         else if (execution != null) {

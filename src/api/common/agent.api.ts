@@ -11,6 +11,7 @@ import {
 } from "@/types";
 import { BaseApi, BaseResponseSchema } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
+import { MiniExecutionEvent } from "@/types/minified.type";
 
 export class BaseAgentApi extends BaseApi {
   protected async wrapExecution(
@@ -29,6 +30,7 @@ export class BaseAgentApi extends BaseApi {
       });
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
+        if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
         if (event.op === "init") execution = event.execution;
         else if (execution != null) {
@@ -71,6 +73,7 @@ export class BaseAgentApi extends BaseApi {
       });
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
+        if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
         if (event.op === "init") execution = event.execution;
         else if (execution != null) {
@@ -157,6 +160,7 @@ export type SingleNodeExecuteNonStreamingRequest = z.infer<typeof SingleNodeExec
 export const AgentExecuteRequestSchema = z.object({
   inputs: z.record(z.any()),
   stream: z.boolean().optional(),
+  mini: z.boolean().optional(),
 });
 export type AgentExecuteRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
