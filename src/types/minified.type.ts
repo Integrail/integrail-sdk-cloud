@@ -478,7 +478,7 @@ export namespace MiniExecutionEvent {
   }
 
   export function toEvent(miniEvent: MiniExecutionEvent): ExecutionEvent {
-    switch (miniEvent[3]) {
+    switch (miniEvent[2]) {
       case MiniExecutionEventOp.INIT: {
         const e = MiniInitEventSchema.parse(miniEvent);
         return {
@@ -551,9 +551,9 @@ export namespace MiniExecutionEvent {
       case MiniExecutionEventOp.PING: {
         const e = MiniPingEventSchema.parse(miniEvent);
         return {
-          executionId: miniEvent[0],
-          createdAt: miniEvent[1],
-          op: toEventOp(miniEvent[2]) as ExecutionEventOp.PING,
+          executionId: e[0],
+          createdAt: e[1],
+          op: toEventOp(e[2]) as ExecutionEventOp.PING,
         };
       }
       case MiniExecutionEventOp.LOG: {
@@ -571,7 +571,7 @@ export namespace MiniExecutionEvent {
         };
       }
       default:
-        throw new Error(`Unknown mini execution event operation: ${miniEvent[3]}`);
+        throw new Error(`Unknown mini execution event operation: ${miniEvent[2]}`);
     }
   }
 }
