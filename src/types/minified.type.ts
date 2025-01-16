@@ -75,6 +75,19 @@ export enum MiniLogStatusTextAction {
   CLEAR = 0x20,
 }
 
+export const MiniBooleanSchema = z.boolean().or(z.literal(1)).or(z.literal(0));
+export type MiniBoolean = z.infer<typeof MiniBooleanSchema>;
+
+export namespace MiniBoolean {
+  export function fromBoolean(bool: boolean): MiniBoolean {
+    return bool ? 1 : 0;
+  }
+
+  export function toBoolean(miniBool): boolean {
+    return miniBool === true || miniBool === 1;
+  }
+}
+
 export const MiniBaseEventSchema = z.tuple([
   /* executionId: */ ExecutionIdSchema,
   /* createdAt: */ z.coerce.date(),
@@ -100,7 +113,7 @@ const MiniOutputUpdateEventSchema = z.tuple([
   /* op: */ z.literal(MiniExecutionEventOp.OUTPUT_UPDATE),
   /* output: */ z.string().min(1),
   /* value: */ z.any(),
-  /* append: */ z.boolean().nullish(),
+  /* append: */ MiniBooleanSchema.nullish(),
 ]);
 type MiniOutputUpdateEvent = z.infer<typeof MiniOutputUpdateEventSchema>;
 
@@ -132,7 +145,7 @@ const MiniNodeOutputUpdateEventSchema = z.tuple([
   /* output: */ z.string().min(1),
   /* status: */ z.nativeEnum(MiniOutputStateStatus),
   /* value: */ z.any(),
-  /* append: */ z.boolean().nullish(),
+  /* append: */ MiniBooleanSchema.nullish(),
 ]);
 type MiniNodeOutputUpdateEvent = z.infer<typeof MiniNodeOutputUpdateEventSchema>;
 
@@ -422,7 +435,7 @@ export namespace MiniExecutionEvent {
           fromEventOp(event.op) as MiniExecutionEventOp.OUTPUT_UPDATE,
           event.output,
           event.value,
-          event.append,
+          event.append == null ? undefined : MiniBoolean.fromBoolean(event.append),
         ];
       case ExecutionEventOp.NODE_UPDATE_STATUS:
         return [
@@ -454,7 +467,7 @@ export namespace MiniExecutionEvent {
           event.output,
           fromOutputStateStatus(event.status),
           event.value,
-          event.append,
+          event.append == null ? undefined : MiniBoolean.fromBoolean(event.append),
         ];
       case ExecutionEventOp.PING:
         return [
@@ -507,7 +520,7 @@ export namespace MiniExecutionEvent {
           op: toEventOp(e[2]) as ExecutionEventOp.OUTPUT_UPDATE,
           output: e[3],
           value: e[4],
-          append: e[5],
+          append: MiniBoolean.toBoolean(e[5]),
         };
       }
       case MiniExecutionEventOp.NODE_UPDATE_STATUS: {
@@ -545,7 +558,7 @@ export namespace MiniExecutionEvent {
           output: e[4],
           status: toOutputStateStatus(e[5]),
           value: e[6],
-          append: e[7],
+          append: e[7] == null ? undefined : MiniBoolean.toBoolean(e[7]),
         };
       }
       case MiniExecutionEventOp.PING: {
