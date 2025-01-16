@@ -160,7 +160,7 @@ export type SingleNodeExecuteNonStreamingRequest = z.infer<typeof SingleNodeExec
 export const AgentExecuteRequestSchema = z.object({
   inputs: z.record(z.any()),
   stream: z.boolean().optional(),
-  mini: z.boolean().optional(),
+  debug: z.boolean().optional(),
 });
 export type AgentExecuteRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
