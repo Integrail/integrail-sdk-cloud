@@ -1,13 +1,11 @@
 import { z } from "@/prelude/zod";
 import {
-  AgentCategory,
   AgentExecution,
-  AgentSubcategory,
-  NodeDefinitionSchema,
+  BaseEventSchema,
   ExecutionEvent,
   ExecutionIdSchema,
   InlineAgentSchema,
-  BaseEventSchema,
+  NodeDefinitionSchema,
 } from "@/types";
 import { BaseApi, BaseResponseSchema } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
@@ -32,8 +30,9 @@ export class BaseAgentApi extends BaseApi {
       void jsonl(response, async (data) => {
         if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
-        if (event.op === "init") execution = event.execution;
-        else if (execution != null) {
+        if (execution === null) {
+          if (event.op === "init") execution = event.execution;
+        } else {
           execution = AgentExecution.applyEvents({
             ...execution,
             events: [...(execution.events ?? []), event],
