@@ -41,6 +41,7 @@ export enum ExternalService {
   WIX = "wix",
   CLICKUP = "clickup",
   TELEGRAM = "telegram",
+  SALESFORCE = "salesforce",
 
   OPENAI = "openai",
   OLLAMA = "ollama",
