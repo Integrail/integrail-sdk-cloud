@@ -10,5 +10,6 @@ export const VectorMemorySchema = z.object({
   vectorSize: z.number().int().nullish(),
   embeddedTextFieldName: z.string(),
   fullTextFieldName: z.string(),
+  chunkSize: z.number().int().min(1).nullish(),
 });
 export type VectorMemory = z.infer<typeof VectorMemorySchema>;

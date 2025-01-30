@@ -1,16 +1,15 @@
 import { z } from "@/prelude/zod";
 import {
-  AgentCategory,
   AgentExecution,
-  AgentSubcategory,
-  NodeDefinitionSchema,
+  BaseEventSchema,
   ExecutionEvent,
   ExecutionIdSchema,
   InlineAgentSchema,
-  BaseEventSchema,
+  NodeDefinitionSchema,
 } from "@/types";
 import { BaseApi, BaseResponseSchema } from "@/api/base.api";
 import { jsonl } from "@/helpers/jsonl.helper";
+import { MiniExecutionEvent } from "@/types/minified.type";
 
 export class BaseAgentApi extends BaseApi {
   protected async wrapExecution(
@@ -29,9 +28,11 @@ export class BaseAgentApi extends BaseApi {
       });
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
+        if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
-        if (event.op === "init" && execution == null) execution = event.execution;
-        else if (execution != null) {
+        if (execution === null) {
+          if (event.op === "init") execution = event.execution;
+        } else {
           execution = AgentExecution.applyEvents({
             ...execution,
             events: [...(execution.events ?? []), event],
@@ -71,8 +72,9 @@ export class BaseAgentApi extends BaseApi {
       });
       let execution: AgentExecution | null = null;
       void jsonl(response, async (data) => {
+        if (Array.isArray(data)) data = MiniExecutionEvent.toEvent(data as MiniExecutionEvent);
         const event = BaseEventSchema.passthrough().parse(data) as ExecutionEvent;
-        if (event.op === "init" && execution == null) execution = event.execution;
+        if (event.op === "init") execution = event.execution;
         else if (execution != null) {
           execution = AgentExecution.applyEvents({
             ...execution,
@@ -157,6 +159,7 @@ export type SingleNodeExecuteNonStreamingRequest = z.infer<typeof SingleNodeExec
 export const AgentExecuteRequestSchema = z.object({
   inputs: z.record(z.any()),
   stream: z.boolean().optional(),
+  debug: z.boolean().optional(),
 });
 export type AgentExecuteRequest = z.infer<typeof AgentExecuteRequestSchema>;
 

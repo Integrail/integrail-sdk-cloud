@@ -9,6 +9,7 @@ export * from "./execution.type";
 export * from "./fail-mode.type";
 export * from "./input.type";
 export * from "./media.type";
+export * from "./minified.type";
 export * from "./node-definition.type";
 export * from "./node-execution.type";
 export * from "./node.type";
