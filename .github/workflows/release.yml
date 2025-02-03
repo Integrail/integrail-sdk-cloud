@@ -2,8 +2,8 @@ name: Node.js CI
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -13,16 +13,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
-      - run: npm ci
-      - run: npm pack
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: integrail-sdk-cloud-*.tgz
-          repository: Integrail/integrail-sdk-cloud
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get current version from package.json
+        run: echo "VERSION=v$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Check if tag exists
+        run: |
+          if git rev-parse ${{ env.VERSION }} >/dev/null 2>&1; then
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Create Git tag
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
+
+      - name: Publish to npm
+        if: env.TAG_EXISTS == 'false'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
