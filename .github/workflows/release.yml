@@ -23,7 +23,8 @@ jobs:
       - name: Read .env
         id: dotenv
         uses: falti/dotenv-action@v1.1.4
-        keys-case: bypass
+        with:
+          keys-case: bypass
 
       - name: Check out repository
         uses: actions/checkout@v4
