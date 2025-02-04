@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Prepare secrets
+      - name: prepare secrets
+        id: prepare-secrets
         env:
           SIMPLE_CONTAINER_CONFIG: ${{ secrets.SC_CONFIG }}
         run: |
-          bash <(curl -Ls "https://dist.simple-container.com/sc.sh") --version
-          sc secrets reveal --force
+          bash <(curl -Ls "https://dist.simple-container.com/sc.sh") secrets reveal --force
 
       - name: Read .env
         id: dotenv
