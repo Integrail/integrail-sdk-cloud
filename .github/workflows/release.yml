@@ -13,6 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Prepare secrets
+        env:
+          SIMPLE_CONTAINER_CONFIG: ${{ secrets.SC_CONFIG }}
+        run: |
+          bash <(curl -Ls "https://dist.simple-container.com/sc.sh") --version
+          sc secrets reveal --force
+
+      - name: Read .env
+        id: dotenv
+        uses: falti/dotenv-action@v1.1.4
+        keys-case: bypass
+
       - name: Check out repository
         uses: actions/checkout@v4
 
@@ -46,4 +58,4 @@ jobs:
         if: env.TAG_EXISTS == 'false'
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ steps.dotenv.outputs.NPM_TOKEN }}
