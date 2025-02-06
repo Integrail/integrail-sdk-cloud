@@ -16,6 +16,7 @@ export class BaseApi {
       headers: { ...init?.headers, Authorization: `Bearer ${this.options.apiToken}` },
     });
     if (response.status >= 200 && response.status < 300) return response;
+    console.error("!!!", await response.text());
     throw new Error(`Request failed with status ${response.status}`);
   }
 
