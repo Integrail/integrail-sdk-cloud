@@ -2,18 +2,19 @@ import { z } from "@/prelude/zod";
 
 import { TypeName } from "./data.type";
 
-export const MemoryMetadataType = z.enum([
+export const MemoryMetadataFieldType = z.enum([
   TypeName.STRING,
   TypeName.NUMBER,
   TypeName.DATE,
   TypeName.BOOLEAN,
 ]);
 
-export const MemoryMetadata = z.object({
+export const MemoryMetadataFieldSchema = z.object({
   fieldName: z.string(),
-  fieldType: MemoryMetadataType,
+  fieldType: MemoryMetadataFieldType,
   optional: z.boolean(),
 });
+export type MemoryMetadataField = z.infer<typeof MemoryMetadataFieldSchema>;
 
 export const VectorMemorySchema = z.object({
   name: z.string(),
@@ -26,6 +27,6 @@ export const VectorMemorySchema = z.object({
   embeddedTextFieldName: z.string(),
   fullTextFieldName: z.string(),
   chunkSize: z.number().int().min(1).nullish(),
-  metadata: z.array(MemoryMetadata).nullish(),
+  metadata: z.array(MemoryMetadataFieldSchema).nullish(),
 });
 export type VectorMemory = z.infer<typeof VectorMemorySchema>;
