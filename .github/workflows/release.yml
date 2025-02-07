@@ -44,8 +44,10 @@ jobs:
       - name: Check if tag exists
         run: |
           if git rev-parse ${{ env.VERSION }} >/dev/null 2>&1; then
+            echo "Tag already exists."
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
           else
+            echo "Tag doesn't exist yet."
             echo "TAG_EXISTS=false" >> $GITHUB_ENV
           fi
 
