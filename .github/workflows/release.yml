@@ -16,6 +16,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Fetch tags
+        run: git fetch --tags
+
       - name: prepare secrets
         id: prepare-secrets
         env:
