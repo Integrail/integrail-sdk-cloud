@@ -60,8 +60,13 @@ jobs:
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
 
+      - name: Auth npm
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${{ steps.dotenv.outputs.NPM_TOKEN }}'
+
       - name: Publish to npm
         if: env.TAG_EXISTS == 'false'
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ steps.dotenv.outputs.NPM_TOKEN }}
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ steps.dotenv.outputs.NPM_TOKEN }}
