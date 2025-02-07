@@ -63,7 +63,7 @@ jobs:
       - name: Auth npm
         if: env.TAG_EXISTS == 'false'
         run: |
-          echo '//registry.npmjs.org/:_authToken=${{ steps.dotenv.outputs.NPM_TOKEN }}'
+          echo '//registry.npmjs.org/:_authToken=${{ steps.dotenv.outputs.NPM_TOKEN }}' > .npmrc
 
       - name: Publish to npm
         if: env.TAG_EXISTS == 'false'
