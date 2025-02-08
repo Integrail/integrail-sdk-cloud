@@ -2,8 +2,8 @@ name: Node.js CI
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -13,16 +13,60 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fetch tags
+        run: git fetch --tags
+
+      - name: prepare secrets
+        id: prepare-secrets
+        env:
+          SIMPLE_CONTAINER_CONFIG: ${{ secrets.SC_CONFIG }}
+        run: |
+          bash <(curl -Ls "https://dist.simple-container.com/sc.sh") secrets reveal --force
+
+      - name: Read .env
+        id: dotenv
+        uses: falti/dotenv-action@v1.1.4
+        with:
+          keys-case: bypass
+
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: "npm"
-      - run: npm ci
-      - run: npm pack
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: integrail-sdk-cloud-*.tgz
-          repository: Integrail/integrail-sdk-cloud
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get current version from package.json
+        run: echo "VERSION=v$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Check if tag exists
+        run: |
+          if git rev-parse ${{ env.VERSION }} >/dev/null 2>&1; then
+            echo "Tag already exists."
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "Tag doesn't exist yet."
+            echo "TAG_EXISTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Create Git tag
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
+
+      - name: Auth npm
+        if: env.TAG_EXISTS == 'false'
+        run: |
+          echo '//registry.npmjs.org/:_authToken=${{ steps.dotenv.outputs.NPM_TOKEN }}' > .npmrc
+
+      - name: Publish to npm
+        if: env.TAG_EXISTS == 'false'
+        run: npm publish
+        # env:
+        #   NODE_AUTH_TOKEN: ${{ steps.dotenv.outputs.NPM_TOKEN }}
