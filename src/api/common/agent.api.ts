@@ -204,3 +204,32 @@ export const AgentExecuteNonStreamingResponseSchema = BaseResponseSchema.extend(
 export type AgentExecuteNonStreamingResponse = z.infer<
   typeof AgentExecuteNonStreamingResponseSchema
 >;
+
+export const AgentSubsetExecuteRequestSchema = AgentExecuteRequestSchema.extend({
+  runNodes: z.array(
+    z.object({
+      id: z.string(),
+      overrides: z.record(z.any()).optional(),
+    }),
+  ),
+  globalOverrides: z.record(z.any()).optional(),
+});
+export type AgentSubsetExecuteRequest = z.infer<typeof AgentSubsetExecuteRequestSchema>;
+
+export const AgentSubsetExecuteStreamingRequestSchema = AgentSubsetExecuteRequestSchema.and(
+  z.object({
+    stream: z.literal(true),
+  }),
+);
+export type AgentSubsetExecuteStreamingRequest = z.infer<
+  typeof AgentSubsetExecuteStreamingRequestSchema
+>;
+
+export const AgentSubsetExecuteNonStreamingRequestSchema = AgentSubsetExecuteRequestSchema.and(
+  z.object({
+    stream: z.literal(false).optional(),
+  }),
+);
+export type AgentSubsetExecuteNonStreamingRequest = z.infer<
+  typeof AgentSubsetExecuteNonStreamingRequestSchema
+>;
