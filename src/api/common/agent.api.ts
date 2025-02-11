@@ -212,7 +212,7 @@ export const AgentSubsetExecuteRequestSchema = AgentExecuteRequestSchema.extend(
       overrides: z.record(z.any()).optional(),
     }),
   ),
-  globalOverrides: z.record(z.any()).optional(),
+  globalOverrides: z.record(z.string(), z.any()).optional(),
 });
 export type AgentSubsetExecuteRequest = z.infer<typeof AgentSubsetExecuteRequestSchema>;
 
