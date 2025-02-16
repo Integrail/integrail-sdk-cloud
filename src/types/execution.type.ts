@@ -1,5 +1,6 @@
 import { z } from "@/prelude/zod";
 
+import { GlobalOverrides } from "./override.type";
 import { AgentSchema } from "./agent.type";
 import { NodeId } from "./node.type";
 import {
@@ -155,6 +156,7 @@ export const AgentExecutionSchema = z.object({
   message: z.string().nullish(),
   _errors: z.array(z.any()).nullish(),
   parentExecutionId: z.string().nullish(),
+  globalOverrides: z.custom<GlobalOverrides>().optional(),
 });
 export type AgentExecution = z.infer<typeof AgentExecutionSchema>;
 
