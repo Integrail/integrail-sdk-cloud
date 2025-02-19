@@ -3,7 +3,7 @@
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "scripts": {
     "check": "tsc --noEmit",
     "check:watch": "tsc --noEmit --watch",
@@ -57,16 +57,6 @@
       "import": {
         "default": "./dist/types/index.mjs",
         "types": "./dist/types/index.d.ts"
-      }
-    },
-    "./helpers": {
-      "require": {
-        "default": "./dist/helpers/index.js",
-        "types": "./dist/helpers/index.d.ts"
-      },
-      "import": {
-        "default": "./dist/helpers/index.mjs",
-        "types": "./dist/helpers/index.d.ts"
       }
     }
   },
