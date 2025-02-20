@@ -52,7 +52,7 @@ export const AgentSubcategoryEnum = Enum.of<
   LLM_THINKING: {
     name: "llm-thinking",
     title: "LLM (Thinking)",
-    description: "Generates text based on text input with a thinking process.",
+    description: "Separate reasoning from LLM.",
     category: AgentCategory.LLM,
   },
   LLM_CHAT: {
