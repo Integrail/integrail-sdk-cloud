@@ -54,6 +54,7 @@ export enum ExternalService {
   BFL = "bfl",
   ELEVENLABS = "elevenlabs",
   X_AI = "x_ai",
+  TWILIO = "twilio"
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
