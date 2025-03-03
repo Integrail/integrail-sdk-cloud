@@ -176,7 +176,7 @@ export namespace Value {
     } else if (typeof value === "string") {
       return { type: TypeName.STRING, value };
     } else if (Array.isArray(value)) {
-      return { type: TypeName.LIST, value: value.map(fromJsValue) };
+      return { type: TypeName.LIST, value: value.filter((v) => v != null).map(fromJsValue) };
     } else if (value instanceof Object) {
       return {
         type: TypeName.OBJECT,
