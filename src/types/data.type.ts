@@ -16,6 +16,7 @@ export enum TypeName {
   // Complex types.
   OBJECT = "object",
   LIST = "list",
+  STREAM = "stream",
   DICT = "dict",
   ONE_OF = "oneOf",
   ANY = "any",
@@ -54,7 +55,7 @@ export enum ExternalService {
   BFL = "bfl",
   ELEVENLABS = "elevenlabs",
   X_AI = "x_ai",
-  TWILIO = "twilio"
+  TWILIO = "twilio",
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
@@ -101,6 +102,10 @@ export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("t
     min: z.number().int().nonnegative().nullish(),
     max: z.number().int().nonnegative().nullish(),
   }),
+  z.object({
+    type: z.literal(TypeName.STREAM),
+    elements: z.lazy(() => TypeSchema),
+  }),
   z.object({ type: z.literal(TypeName.DICT), elements: z.lazy(() => TypeSchema) }),
   z.object({
     type: z.literal(TypeName.ONE_OF),
@@ -118,6 +123,7 @@ export type TypeComplex =
       max?: number | null;
       defaultLimit?: number | null;
     }
+  | { type: TypeName.STREAM; elements: Type }
   | { type: TypeName.DICT; elements: Type }
   | { type: TypeName.ONE_OF; variants: Type[] }
   | { type: TypeName.ANY };
@@ -199,6 +205,11 @@ export namespace Type {
           items: toJSONSchema(t.elements),
           minItems: t.min,
           maxItems: t.max,
+        };
+      case TypeName.STREAM:
+        return {
+          type: "array",
+          items: toJSONSchema(t.elements),
         };
       case TypeName.DICT:
         return {
