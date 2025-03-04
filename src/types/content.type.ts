@@ -18,6 +18,7 @@ export const ContentTypeEnum = Enum.of<
   BMP: { name: "image/bmp", category: ContentCategory.IMAGE, extensions: [".bmp"] },
   TIFF: { name: "image/tiff", category: ContentCategory.IMAGE, extensions: [".tif", ".tiff"] },
   PPM: { name: "image/x-portable-pixmap", category: ContentCategory.IMAGE, extensions: [".ppm"] },
+  WEBP: { name: "image/webp", category: ContentCategory.IMAGE, extensions: [".webp"] },
 
   // Audio.
   AAC: { name: "audio/aac", category: ContentCategory.AUDIO, extensions: [".aac"] },
