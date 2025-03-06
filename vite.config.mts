@@ -7,16 +7,19 @@ import external from "vite-plugin-external";
 
 import pkg from "./package.json";
 
+// Helper to normalize paths for Windows compatibility
+const normalizePath = (p) => p.replace(/\\/g, "/");
+
 export default defineConfig({
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
+      "@": normalizePath(path.resolve(__dirname, "src")),
     },
   },
   build: {
     target: "es2021",
     lib: {
-      entry: fg.globSync("src/**/*.ts", { cwd: __dirname }),
+      entry: fg.sync(normalizePath(path.resolve(__dirname, "src/**/*.ts"))),
       name: "[name].js",
     },
     rollupOptions: {
@@ -28,7 +31,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    dts({ tsconfigPath: "./tsconfig.json" }),
+    dts({ tsconfigPath: normalizePath("./tsconfig.json") }),
     external({
       nodeBuiltins: true,
       externalizeDeps: Object.keys(pkg.dependencies),
