@@ -96,8 +96,14 @@ export type CloudAgentExecuteStreamingRequest = z.infer<
   typeof CloudAgentExecuteStreamingRequestSchema
 >;
 
+export const CloudAgentExecuteSyncRequestSchema = CloudAgentExecuteRequestSchema.extend({
+  sync: z.literal(true),
+});
+export type CloudAgentExecuteSyncRequest = z.infer<typeof CloudAgentExecuteSyncRequestSchema>;
+
 export const CloudAgentExecuteNonStreamingRequestSchema = CloudAgentExecuteRequestSchema.extend({
   stream: z.literal(false).optional(),
+  sync: z.literal(false).optional(),
 });
 export type CloudAgentExecuteNonStreamingRequest = z.infer<
   typeof CloudAgentExecuteNonStreamingRequestSchema
