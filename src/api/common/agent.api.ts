@@ -170,9 +170,17 @@ export const AgentExecuteStreamingRequestSchema = AgentExecuteRequestSchema.and(
 );
 export type AgentExecuteStreamingRequest = z.infer<typeof AgentExecuteRequestSchema>;
 
+export const AgentExecuteSyncRequestSchema = AgentExecuteRequestSchema.and(
+  z.object({
+    sync: z.literal(true),
+  }),
+);
+export type AgentExecuteSyncRequest = z.infer<typeof AgentExecuteRequestSchema>;
+
 export const AgentExecuteNonStreamingRequestSchema = AgentExecuteRequestSchema.and(
   z.object({
     stream: z.literal(false).optional(),
+    sync: z.literal(false).optional(),
   }),
 );
 export type AgentExecuteNonStreamingRequest = z.infer<typeof AgentExecuteRequestSchema>;
