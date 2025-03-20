@@ -228,33 +228,34 @@ export const TypeSchema: z.ZodType<Type> = z
     TypeExternalSchema,
   ])
   .and(z.object({ optional: z.boolean().nullish() }));
-export type Type =
-  // Primitive types.
-  | TypeBoolean
-  | TypeNumber
-  | TypeInteger
-  | TypeString
-  | TypeEnum
-  | TypeVector
-  | TypeDate
-  | TypeDateTime
-  // Complex types.
-  | TypeObject
-  | TypeList
-  | TypeDict
-  | TypeOneOf
-  | TypeAny
-  // Media types.
-  | TypeImage
-  | TypeAudio
-  | TypeVideo
-  | TypeThreeDimensional
-  | TypeFile
-  // Reference types.
-  | TypeCall
-  | TypeNodeCall
-  // External types.
-  | TypeExternal;
+export type Type = // Primitive types.
+  (
+    | TypeBoolean
+    | TypeNumber
+    | TypeInteger
+    | TypeString
+    | TypeEnum
+    | TypeVector
+    | TypeDate
+    | TypeDateTime
+    // Complex types.
+    | TypeObject
+    | TypeList
+    | TypeDict
+    | TypeOneOf
+    | TypeAny
+    // Media types.
+    | TypeImage
+    | TypeAudio
+    | TypeVideo
+    | TypeThreeDimensional
+    | TypeFile
+    // Reference types.
+    | TypeCall
+    | TypeNodeCall
+    // External types.
+    | TypeExternal
+  ) & { optional?: boolean | null };
 
 export namespace Type {
   export function toJSONSchema(t: Type): Record<string, any> {
