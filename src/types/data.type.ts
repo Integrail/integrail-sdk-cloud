@@ -54,118 +54,207 @@ export enum ExternalService {
   BFL = "bfl",
   ELEVENLABS = "elevenlabs",
   X_AI = "x_ai",
-  TWILIO = "twilio"
+  TWILIO = "twilio",
 }
 
 export const InputRefSchema = z.object({ ref: z.string().min(1) });
 export type InputRef = z.infer<typeof InputRefSchema>;
 
-export const TypePrimitiveSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal(TypeName.BOOLEAN) }),
-  z.object({
-    type: z.literal(TypeName.NUMBER),
-    min: z.number().nullish(),
-    max: z.number().nullish(),
-  }),
-  z.object({
-    type: z.literal(TypeName.INTEGER),
-    min: z.number().int().nullish(),
-    max: z.number().int().nullish(),
-  }),
-  z.object({
-    type: z.literal(TypeName.STRING),
-    min: z.number().int().nullish(),
-    max: z.number().int().nullish(),
-    truncate: z.boolean().nullish(),
-  }),
-  z.object({ type: z.literal(TypeName.ENUM), variants: z.array(z.string()).optional() }),
-  z.object({ type: z.literal(TypeName.VECTOR), size: z.number().int().min(1) }),
-  z.object({ type: z.literal(TypeName.DATE) }),
-  z.object({ type: z.literal(TypeName.DATETIME) }),
-]);
-export type TypePrimitive = z.infer<typeof TypePrimitiveSchema>;
+export const TypeBooleanSchema = z.object({ type: z.literal(TypeName.BOOLEAN) });
+export type TypeBoolean = z.infer<typeof TypeBooleanSchema>;
 
-export const TypeComplexSchema: z.ZodType<TypeComplex> = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal(TypeName.OBJECT),
-    properties: z.record(
-      z.string(),
-      z.lazy(() => TypeSchema),
-    ),
-  }),
-  z.object({
-    type: z.literal(TypeName.LIST),
-    elements: z.lazy(() => TypeSchema),
-    size: z.union([z.number().int(), InputRefSchema]).nullish(),
-    defaultLimit: z.number().int().nonnegative().nullish(),
-    min: z.number().int().nonnegative().nullish(),
-    max: z.number().int().nonnegative().nullish(),
-  }),
-  z.object({ type: z.literal(TypeName.DICT), elements: z.lazy(() => TypeSchema) }),
-  z.object({
-    type: z.literal(TypeName.ONE_OF),
-    variants: z.array(z.lazy(() => TypeSchema)),
-  }),
-  z.object({ type: z.literal(TypeName.ANY) }),
-]);
-export type TypeComplex =
-  | { type: TypeName.OBJECT; properties: Record<string, Type> }
-  | {
-      type: TypeName.LIST;
-      elements: Type;
-      size?: number | InputRef | null;
-      min?: number | null;
-      max?: number | null;
-      defaultLimit?: number | null;
-    }
-  | { type: TypeName.DICT; elements: Type }
-  | { type: TypeName.ONE_OF; variants: Type[] }
-  | { type: TypeName.ANY };
+export const TypeNumberSchema = z.object({
+  type: z.literal(TypeName.NUMBER),
+  min: z.number().nullish(),
+  max: z.number().nullish(),
+});
+export type TypeNumber = z.infer<typeof TypeNumberSchema>;
 
-export const TypeMediaSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal(TypeName.IMAGE) }),
-  z.object({
-    type: z.literal(TypeName.AUDIO),
-    formats: z
-      .array(z.string())
-      .optional()
-      .describe(
-        Object.values(ContentTypeEnum)
-          .filter((ct) => ct.category === ContentCategory.AUDIO)
-          .map((ct) => ct.name)
-          .join(", "),
-      )
-      .optional(),
-    extensions: z.array(z.string()).optional(),
-    maxFileSize: z.number().int().optional().describe("Max audio file size in bytes."),
-  }),
-  z.object({ type: z.literal(TypeName.VIDEO) }),
-  z.object({ type: z.literal(TypeName.THREE_DIMENSIONAL) }),
-  z.object({ type: z.literal(TypeName.FILE) }),
-]);
-export type TypeMedia = z.infer<typeof TypeMediaSchema>;
+export const TypeIntegerSchema = z.object({
+  type: z.literal(TypeName.INTEGER),
+  min: z.number().int().nullish(),
+  max: z.number().int().nullish(),
+});
+export type TypeInteger = z.infer<typeof TypeIntegerSchema>;
 
-export const TypeRefSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal(TypeName.CALL) }),
-  z.object({ type: z.literal(TypeName.NODE_CALL) }),
-]);
-export type TypeRef = z.infer<typeof TypeRefSchema>;
+export const TypeStringSchema = z.object({
+  type: z.literal(TypeName.STRING),
+  min: z.number().int().nullish(),
+  max: z.number().int().nullish(),
+  truncate: z.boolean().nullish(),
+});
+export type TypeString = z.infer<typeof TypeStringSchema>;
+
+export const TypeEnumSchema = z.object({
+  type: z.literal(TypeName.ENUM),
+  variants: z.array(z.string()).optional(),
+});
+export type TypeEnum = z.infer<typeof TypeEnumSchema>;
+
+export const TypeVectorSchema = z.object({
+  type: z.literal(TypeName.VECTOR),
+  size: z.number().int().min(1),
+});
+export type TypeVector = z.infer<typeof TypeVectorSchema>;
+
+export const TypeDateSchema = z.object({ type: z.literal(TypeName.DATE) });
+export type TypeDate = z.infer<typeof TypeDateSchema>;
+
+export const TypeDateTimeSchema = z.object({ type: z.literal(TypeName.DATETIME) });
+export type TypeDateTime = z.infer<typeof TypeDateTimeSchema>;
+
+export const TypeObjectSchema = z.object({
+  type: z.literal(TypeName.OBJECT),
+  properties: z.record(
+    z.string(),
+    z.lazy(() => TypeSchema),
+  ),
+}) satisfies z.ZodType<TypeObject>;
+export type TypeObject = {
+  type: TypeName.OBJECT;
+  properties: Record<string, Type>;
+};
+
+export const TypeListSchema = z.object({
+  type: z.literal(TypeName.LIST),
+  elements: z.lazy(() => TypeSchema),
+  size: z.union([z.number().int(), InputRefSchema]).nullish(),
+  defaultLimit: z.number().int().nonnegative().nullish(),
+  min: z.number().int().nonnegative().nullish(),
+  max: z.number().int().nonnegative().nullish(),
+}) satisfies z.ZodType<TypeList>;
+export type TypeList = {
+  type: TypeName.LIST;
+  elements: Type;
+  size?: number | InputRef | null;
+  defaultLimit?: number | null;
+  min?: number | null;
+  max?: number | null;
+};
+
+export const TypeDictSchema = z.object({
+  type: z.literal(TypeName.DICT),
+  elements: z.lazy(() => TypeSchema),
+}) satisfies z.ZodType<TypeDict>;
+export type TypeDict = {
+  type: TypeName.DICT;
+  elements: Type;
+};
+
+export const TypeOneOfSchema = z.object({
+  type: z.literal(TypeName.ONE_OF),
+  variants: z.array(z.lazy(() => TypeSchema)),
+}) satisfies z.ZodType<TypeOneOf>;
+export type TypeOneOf = {
+  type: TypeName.ONE_OF;
+  variants: Type[];
+};
+
+export const TypeAnySchema = z.object({ type: z.literal(TypeName.ANY) });
+export type TypeAny = z.infer<typeof TypeAnySchema>;
+
+export const TypeImageSchema = z.object({ type: z.literal(TypeName.IMAGE) });
+export type TypeImage = z.infer<typeof TypeImageSchema>;
+
+export const TypeAudioSchema = z.object({
+  type: z.literal(TypeName.AUDIO),
+  formats: z
+    .array(z.string())
+    .optional()
+    .describe(
+      Object.values(ContentTypeEnum)
+        .filter((ct) => ct.category === ContentCategory.AUDIO)
+        .map((ct) => ct.name)
+        .join(", "),
+    )
+    .optional(),
+  extensions: z.array(z.string()).optional(),
+  maxFileSize: z.number().int().optional().describe("Max audio file size in bytes."),
+});
+export type TypeAudio = z.infer<typeof TypeAudioSchema>;
+
+export const TypeVideoSchema = z.object({ type: z.literal(TypeName.VIDEO) });
+export type TypeVideo = z.infer<typeof TypeVideoSchema>;
+
+export const TypeThreeDimensionalSchema = z.object({ type: z.literal(TypeName.THREE_DIMENSIONAL) });
+export type TypeThreeDimensional = z.infer<typeof TypeThreeDimensionalSchema>;
+
+export const TypeFileSchema = z.object({ type: z.literal(TypeName.FILE) });
+export type TypeFile = z.infer<typeof TypeFileSchema>;
+
+export const TypeCallSchema = z.object({ type: z.literal(TypeName.CALL) });
+export type TypeCall = z.infer<typeof TypeCallSchema>;
+
+export const TypeNodeCallSchema = z.object({ type: z.literal(TypeName.NODE_CALL) });
+export type TypeNodeCall = z.infer<typeof TypeNodeCallSchema>;
 
 export const TypeExternalSchema = z.object({
   type: z.literal(TypeName.AUTH_TOKEN),
   service: z.nativeEnum(ExternalService),
 });
+export type TypeExternal = z.infer<typeof TypeExternalSchema>;
 
-export const TypeSchema = z
-  .union([
-    TypePrimitiveSchema,
-    TypeComplexSchema,
-    TypeMediaSchema,
-    TypeRefSchema,
+export const TypeSchema: z.ZodType<Type> = z
+  .discriminatedUnion("type", [
+    // Primitive types.
+    TypeBooleanSchema,
+    TypeNumberSchema,
+    TypeIntegerSchema,
+    TypeStringSchema,
+    TypeEnumSchema,
+    TypeVectorSchema,
+    TypeDateSchema,
+    TypeDateTimeSchema,
+
+    // Complex types.
+    TypeObjectSchema,
+    TypeListSchema,
+    TypeDictSchema,
+    TypeOneOfSchema,
+    TypeAnySchema,
+
+    // Media types.
+    TypeImageSchema,
+    TypeAudioSchema,
+    TypeVideoSchema,
+    TypeThreeDimensionalSchema,
+    TypeFileSchema,
+
+    // Reference types.
+    TypeCallSchema,
+    TypeNodeCallSchema,
+
+    // External types.
     TypeExternalSchema,
   ])
   .and(z.object({ optional: z.boolean().nullish() }));
-export type Type = z.infer<typeof TypeSchema>;
+export type Type =
+  // Primitive types.
+  | TypeBoolean
+  | TypeNumber
+  | TypeInteger
+  | TypeString
+  | TypeEnum
+  | TypeVector
+  | TypeDate
+  | TypeDateTime
+  // Complex types.
+  | TypeObject
+  | TypeList
+  | TypeDict
+  | TypeOneOf
+  | TypeAny
+  // Media types.
+  | TypeImage
+  | TypeAudio
+  | TypeVideo
+  | TypeThreeDimensional
+  | TypeFile
+  // Reference types.
+  | TypeCall
+  | TypeNodeCall
+  // External types.
+  | TypeExternal;
 
 export namespace Type {
   export function toJSONSchema(t: Type): Record<string, any> {
