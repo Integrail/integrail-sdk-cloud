@@ -1,4 +1,4 @@
-// TODO: rename into NodeFailStrategy.
+// TODO: rename into NodeInputFailStrategy.
 export enum FailMode {
   /** Fail unless at least one input is present. */
   ANY = "any",
@@ -8,6 +8,11 @@ export enum FailMode {
 
   /** Never fail. */
   NEVER = "never",
+}
+
+export enum NodeFailStrategy {
+  NONE = "none",
+  FAIL_AGENT = "failAgent",
 }
 
 export enum AgentFailStrategy {
