@@ -42,6 +42,7 @@ export const NodeExecutionStateSchema = z.object({
   message: z.string().nullish(),
   retries: z.number().int().nonnegative(),
   stats: ExecutionStatsSchema.nullish(),
+  failBranch: z.boolean().nullish(),
 });
 
 export type NodeExecutionState = z.infer<typeof NodeExecutionStateSchema>;
