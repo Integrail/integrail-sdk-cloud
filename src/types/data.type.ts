@@ -190,7 +190,7 @@ export type TypeNodeCall = z.infer<typeof TypeNodeCallSchema>;
 
 export const TypeExternalSchema = z.object({
   type: z.literal(TypeName.AUTH_TOKEN),
-  service: z.nativeEnum(ExternalService),
+  service: z.nativeEnum(ExternalService).nullish(),
 });
 export type TypeExternal = z.infer<typeof TypeExternalSchema>;
 
