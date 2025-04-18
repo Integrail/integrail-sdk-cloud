@@ -45,6 +45,7 @@ export enum ExternalService {
 
   OPENAI = "openai",
   OLLAMA = "ollama",
+  ENTERPRISE_OLLAMA = "enterprise_ollama",
   ANTHROPIC = "anthropic",
   ANYSCALE = "anyscale",
   FIREWORKS = "fireworks",
