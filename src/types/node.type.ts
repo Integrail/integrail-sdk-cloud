@@ -24,6 +24,8 @@ export const NodeSchema = z.object({
   maxRetries: z.number().int().nonnegative().nullish(),
   retryDelayMs: z.number().int().min(100).max(30000).nullish(),
   errorMessage: z.string().nullish(),
+  failAgentIfFails: z.boolean().nullish(),
+  failBranchIfFails: z.boolean().nullish(),
 
   /** @deprecated use call instead */
   callDescription: z.string().nullish(),
