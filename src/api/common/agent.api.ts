@@ -213,6 +213,17 @@ export type AgentExecuteNonStreamingResponse = z.infer<
   typeof AgentExecuteNonStreamingResponseSchema
 >;
 
+// Enhanced response schema that includes execution status and errors for improved API error handling
+// Maintains backwards compatibility by always including error fields (empty when no errors)
+export const EnhancedAgentExecuteResponseSchema = BaseResponseSchema.extend({
+  executionId: ExecutionIdSchema,
+  executionStatus: z.string(), // Always present: "finished", "error", "cancelled", or ""
+  outputs: z.record(z.any()), // Always present: execution outputs or {}
+  errors: z.array(z.string()), // Always present: error messages or []
+  message: z.string(), // Always present: error message or ""
+});
+export type EnhancedAgentExecuteResponse = z.infer<typeof EnhancedAgentExecuteResponseSchema>;
+
 export const AgentSubsetExecuteRequestSchema = AgentExecuteRequestSchema.extend({
   runNodes: z.array(
     z.object({
