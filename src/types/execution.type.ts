@@ -252,7 +252,7 @@ export namespace AgentExecution {
         return {
           ...(nodeState ?? {
             status: NodeExecutionStatus.RUNNING,
-            retries: 1,
+            retries: 0,
             updatedAt: getTimestamp(),
           }),
           outputs: {
@@ -341,7 +341,7 @@ export namespace AgentExecution {
       execution,
       event.nodeId,
       (node) => {
-        node = node ?? { status: NodeExecutionStatus.PENDING, retries: 1, updatedAt: new Date() };
+        node = node ?? { status: NodeExecutionStatus.PENDING, retries: 0, updatedAt: new Date() };
         switch (event.op) {
           case ExecutionEventOp.NODE_UPDATE_STATUS:
             return {

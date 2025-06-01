@@ -42,6 +42,7 @@ export enum ExternalService {
   CLICKUP = "clickup",
   TELEGRAM = "telegram",
   SALESFORCE = "salesforce",
+  MICROSOFT = "microsoft",
 
   OPENAI = "openai",
   OLLAMA = "ollama",
