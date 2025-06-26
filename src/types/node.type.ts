@@ -21,6 +21,7 @@ export const NodeSchema = z.object({
       description: z.string(),
     })
     .nullish(),
+  delayMs: z.number().int().min(0).max(30000).nullish(),
   maxRetries: z.number().int().nonnegative().nullish(),
   retryDelayMs: z.number().int().min(100).max(30000).nullish(),
   errorMessage: z.string().nullish(),
