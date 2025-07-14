@@ -50,6 +50,7 @@ export enum ExternalService {
   ANTHROPIC = "anthropic",
   ANYSCALE = "anyscale",
   FIREWORKS = "fireworks",
+  SAMBANOVA = "sambanova",
   GOOGLE_VERTEX = "google_vertex",
   STABILITY = "stability",
   AIMLAPI = "aimlapi",

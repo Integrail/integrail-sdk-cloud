@@ -49,6 +49,8 @@ export enum MiniNodeExecutionStatus {
 
   // Started.
   RUNNING = 0x30,
+  STREAMING_OUT = 0x31,
+  STREAMING_IN = 0x32,
 
   // Ended.
   FINISHED = 0x40,
@@ -59,8 +61,10 @@ export enum MiniNodeExecutionStatus {
 export enum MiniOutputStateStatus {
   PENDING = 0x10,
   RUNNING = 0x20,
+  STREAMING = 0x25, // New status for real-time streaming updates
   FINISHED = 0x30,
   CANCELLED = 0x40,
+  ERROR = 0x50, // New status for error states
 }
 
 export enum MiniLogLevel {
@@ -306,6 +310,10 @@ export namespace MiniExecutionEvent {
         return MiniNodeExecutionStatus.STARTING;
       case NodeExecutionStatus.RUNNING:
         return MiniNodeExecutionStatus.RUNNING;
+      case NodeExecutionStatus.STREAMING_OUT:
+        return MiniNodeExecutionStatus.STREAMING_OUT;
+      case NodeExecutionStatus.STREAMING_IN:
+        return MiniNodeExecutionStatus.STREAMING_IN;
       case NodeExecutionStatus.RETRY:
         return MiniNodeExecutionStatus.RETRY;
       case NodeExecutionStatus.PENDING:
@@ -324,6 +332,10 @@ export namespace MiniExecutionEvent {
         return NodeExecutionStatus.STARTING;
       case MiniNodeExecutionStatus.RUNNING:
         return NodeExecutionStatus.RUNNING;
+      case MiniNodeExecutionStatus.STREAMING_OUT:
+        return NodeExecutionStatus.STREAMING_OUT;
+      case MiniNodeExecutionStatus.STREAMING_IN:
+        return NodeExecutionStatus.STREAMING_IN;
       case MiniNodeExecutionStatus.RETRY:
         return NodeExecutionStatus.RETRY;
       case MiniNodeExecutionStatus.PENDING:
@@ -343,10 +355,14 @@ export namespace MiniExecutionEvent {
         return MiniOutputStateStatus.RUNNING;
       case OutputStateStatus.PENDING:
         return MiniOutputStateStatus.PENDING;
+      case OutputStateStatus.STREAMING:
+        return MiniOutputStateStatus.STREAMING;
       case OutputStateStatus.FINISHED:
         return MiniOutputStateStatus.FINISHED;
       case OutputStateStatus.CANCELLED:
         return MiniOutputStateStatus.CANCELLED;
+      case OutputStateStatus.ERROR:
+        return MiniOutputStateStatus.ERROR;
     }
   }
   export function toOutputStateStatus(miniStatus: MiniOutputStateStatus): OutputStateStatus {
@@ -355,10 +371,14 @@ export namespace MiniExecutionEvent {
         return OutputStateStatus.RUNNING;
       case MiniOutputStateStatus.PENDING:
         return OutputStateStatus.PENDING;
+      case MiniOutputStateStatus.STREAMING:
+        return OutputStateStatus.STREAMING;
       case MiniOutputStateStatus.FINISHED:
         return OutputStateStatus.FINISHED;
       case MiniOutputStateStatus.CANCELLED:
         return OutputStateStatus.CANCELLED;
+      case MiniOutputStateStatus.ERROR:
+        return OutputStateStatus.ERROR;
     }
   }
 

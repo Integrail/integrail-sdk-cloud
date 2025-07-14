@@ -5,8 +5,10 @@ import { ExecutionStatsSchema } from "./stats.type";
 export enum OutputStateStatus {
   PENDING = "pending",
   RUNNING = "running",
+  STREAMING = "streaming", // New status for real-time streaming updates
   FINISHED = "finished",
   CANCELLED = "cancelled",
+  ERROR = "error", // New status for error states
 }
 
 export const OutputStateSchema = z.object({
@@ -26,6 +28,10 @@ export enum NodeExecutionStatus {
 
   // Started.
   RUNNING = "running",
+
+  // Real-time async operations.
+  STREAMING_OUT = "streaming_out", // Node is outputting data in real-time (e.g., microphone input)
+  STREAMING_IN = "streaming_in", // Node is receiving streaming data (e.g., LLM waiting for transcription)
 
   // Ended.
   FINISHED = "finished",
@@ -62,7 +68,11 @@ export namespace NodeExecutionState {
 
   /** Execution started. */
   export function isStarted(state: NodeExecutionState): boolean {
-    return state.status === NodeExecutionStatus.RUNNING;
+    return (
+      state.status === NodeExecutionStatus.RUNNING ||
+      state.status === NodeExecutionStatus.STREAMING_OUT ||
+      state.status === NodeExecutionStatus.STREAMING_IN
+    );
   }
 
   /** Execution ended. */
@@ -82,5 +92,13 @@ export namespace NodeExecutionState {
 
   export function isSucceeded(state: NodeExecutionState): boolean {
     return state.status === NodeExecutionStatus.FINISHED;
+  }
+
+  /** Node is in streaming mode (async operations). */
+  export function isStreaming(state: NodeExecutionState): boolean {
+    return (
+      state.status === NodeExecutionStatus.STREAMING_OUT ||
+      state.status === NodeExecutionStatus.STREAMING_IN
+    );
   }
 }

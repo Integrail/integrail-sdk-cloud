@@ -96,6 +96,7 @@ const NodeOutputUpdateEventSchema = BaseEventSchema.extend({
   status: z.nativeEnum(OutputStateStatus),
   value: z.any(),
   append: z.boolean().nullish(),
+  stream: z.boolean().nullish(), // New flag for streaming updates
 });
 const NodeOutputEventSchema = z.discriminatedUnion("op", [
   NodeOutputUpdateStatusEventSchema,
