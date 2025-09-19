@@ -1,38 +1,31 @@
-name: Node.js CI
+name: Build and Publish Package
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Force publish even if tag exists'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Fetch tags
-        run: git fetch --tags
-
-      - name: prepare secrets
-        id: prepare-secrets
-        env:
-          SIMPLE_CONTAINER_CONFIG: ${{ secrets.SC_CONFIG }}
-        run: |
-          bash <(curl -Ls "https://dist.simple-container.com/sc.sh") secrets reveal --force
-
-      - name: Read .env
-        id: dotenv
-        uses: falti/dotenv-action@v1.1.4
         with:
-          keys-case: bypass
+          fetch-depth: 0
 
-      - name: Use Node.js 22.x
+      - name: Setup Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
@@ -41,32 +34,38 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Get current version from package.json
+      - name: Extract version from package.json
         run: echo "VERSION=v$(jq -r .version package.json)" >> $GITHUB_ENV
 
       - name: Check if tag exists
         run: |
-          if git rev-parse ${{ env.VERSION }} >/dev/null 2>&1; then
-            echo "Tag already exists."
+          if git tag -l | grep -q "^${{ env.VERSION }}$"; then
+            echo "Tag ${{ env.VERSION }} already exists."
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
           else
-            echo "Tag doesn't exist yet."
+            echo "Tag ${{ env.VERSION }} doesn't exist yet."
             echo "TAG_EXISTS=false" >> $GITHUB_ENV
           fi
 
       - name: Create Git tag
-        if: env.TAG_EXISTS == 'false'
+        if: env.TAG_EXISTS == 'false' || inputs.force_publish
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          # Delete tag if it exists and we're force publishing
+          if [[ "${{ env.TAG_EXISTS }}" == "true" && "${{ inputs.force_publish }}" == "true" ]]; then
+            git tag -d ${{ env.VERSION }}
+            git push origin :refs/tags/${{ env.VERSION }}
+            echo "Removed existing tag for force publish"
+          fi
+          # Create and push new tag
           git tag ${{ env.VERSION }}
           git push origin ${{ env.VERSION }}
 
-      - name: Auth npm
-        if: env.TAG_EXISTS == 'false'
-        run: |
-          echo '//registry.npmjs.org/:_authToken=${{ steps.dotenv.outputs.NPM_TOKEN }}' > .npmrc
+      - name: Configure npm authentication
+        if: env.TAG_EXISTS == 'false' || inputs.force_publish
+        run: echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc
 
       - name: Publish to npm
-        if: env.TAG_EXISTS == 'false'
+        if: env.TAG_EXISTS == 'false' || inputs.force_publish
         run: npm publish
-        # env:
-        #   NODE_AUTH_TOKEN: ${{ steps.dotenv.outputs.NPM_TOKEN }}
