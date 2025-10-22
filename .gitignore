@@ -67,3 +67,52 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 .welder-out/**
 package-lock.json
+
+# === Secrets and sensitive files ===
+# Environment files with secrets
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Secret management files
+secrets.yaml
+**/secrets.yaml
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+
+# AWS credentials
+.aws/credentials
+**/aws-credentials.json
+
+# Cloud credentials
+*credentials*.json
+*service-account*.json
+gcloud-credentials.json
+
+# Terraform sensitive files
+*.tfvars
+!example.tfvars
+!*.auto.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+# SSH keys
+id_rsa
+id_rsa.pub
+id_dsa
+id_dsa.pub
+id_ecdsa
+id_ecdsa.pub
+id_ed25519
+id_ed25519.pub
+
+# API keys and tokens
+*apikey*
+*api-key*
+*token.txt
+*access-token*
