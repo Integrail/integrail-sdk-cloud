@@ -116,3 +116,17 @@ id_ed25519.pub
 *api-key*
 *token.txt
 *access-token*
+
+# Log files (often contain leaked secrets)
+*.log
+logs/
+*.log.*
+
+# Terraform plan files (contain secrets)
+*.tfplan
+*.tfplan.json
+
+# Temporary/debug files
+debug_*.py
+test_*.py
+tmp/
